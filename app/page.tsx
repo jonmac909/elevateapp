@@ -91,7 +91,7 @@ export default function ElevatePage() {
             onClick={() => setShowNewProject(true)}
             className="px-4 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors flex items-center gap-2"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             New
@@ -130,8 +130,8 @@ export default function ElevatePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-[#11142D] mb-2">No projects yet</h3>
-            <p className="text-[#808191] mb-4">Start by creating your first app project</p>
+            <h3 className="text-lg font-semibold text-[#11142D] mb-2 text-balance">No projects yet</h3>
+            <p className="text-[#808191] mb-4 text-pretty">Start by creating your first app project</p>
             <button
               onClick={() => setShowNewProject(true)}
               className="px-4 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors"
@@ -150,8 +150,8 @@ export default function ElevatePage() {
                   className="bg-white rounded-xl border border-[#E4E4E4] p-5 hover:border-[#11142D] hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="size-10 bg-teal-500 rounded-xl flex items-center justify-center">
+                      <svg className="size-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
@@ -172,7 +172,7 @@ export default function ElevatePage() {
                   <div className="mb-2">
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-[#808191]">Progress</span>
-                      <span className="font-medium text-[#11142D]">{project.progress}%</span>
+                      <span className="font-medium text-[#11142D] tabular-nums">{project.progress}%</span>
                     </div>
                     <div className="h-1.5 bg-[#E4E4E4] rounded-full overflow-hidden">
                       <div 

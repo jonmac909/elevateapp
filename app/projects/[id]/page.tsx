@@ -177,7 +177,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Link href="/" className="text-[#808191] hover:text-[#11142D]">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </Link>
@@ -247,7 +247,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       {agentRunning && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 text-center max-w-md">
-            <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="size-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <h3 className="text-lg font-semibold text-[#11142D] mb-2">Running {agentRunning.replace(/_/g, ' ')}</h3>
             <p className="text-sm text-[#808191]">This may take a moment...</p>
           </div>
@@ -266,7 +266,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 onClick={() => setAgentResult(null)}
                 className="p-2 hover:bg-[#F7F8FA] rounded-lg"
               >
-                <svg className="w-5 h-5 text-[#808191]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="size-5 text-[#808191]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -312,11 +312,11 @@ function OverviewTab({ project }: { project: Project }) {
         <div className="space-y-2">
           {completionItems.map((item) => (
             <div key={item.name} className="flex items-center gap-3">
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+              <div className={`size-5 rounded-full flex items-center justify-center ${
                 item.done ? 'bg-green-500' : 'bg-[#E4E4E4]'
               }`}>
                 {item.done && (
-                  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="size-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
                 )}
@@ -770,7 +770,7 @@ function BuildTab({ project }: { project: Project }) {
             { step: 6, title: 'Deploy', desc: 'Deploy to Vercel or Cloudflare' },
           ].map((item) => (
             <div key={item.step} className="flex items-center gap-3 p-3 bg-white rounded-lg">
-              <div className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="size-8 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
                 {item.step}
               </div>
               <div>

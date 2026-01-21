@@ -14,10 +14,12 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
     "@supabase/supabase-js": "^2.91.0",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "next": "16.1.4",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.14.10",
