@@ -23,10 +23,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${plusJakarta.className} antialiased bg-[#F7F8FA]`}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  if (localStorage.getItem('darkMode') === 'true') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className={`${plusJakarta.className} antialiased`}>
         <ToastProvider>
-          <div className="min-h-screen flex">
+          <div className="min-h-dvh flex">
             {/* Sidebar */}
             <Sidebar />
             
