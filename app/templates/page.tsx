@@ -49,10 +49,10 @@ export default function TemplatesPage() {
           <button
             key={cat}
             onClick={() => setFilter(cat)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
               filter === cat
-                ? 'bg-[#7C3AED] text-white'
-                : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#7C3AED]'
+                ? 'bg-[#1a1a2e] text-white'
+                : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#11142D]'
             }`}
           >
             {cat === 'all' ? 'All Templates' : cat}
@@ -71,17 +71,17 @@ export default function TemplatesPage() {
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="bg-white rounded-xl border border-[#E4E4E4] overflow-hidden hover:border-[#7C3AED] hover:shadow-lg transition-all group"
+              className="bg-white rounded-xl border border-[#E4E4E4] overflow-hidden hover:border-[#11142D] hover:shadow-md transition-all group"
             >
               {/* Template Preview */}
-              <div className="h-40 bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center">
+              <div className="h-40 bg-[#F7F8FA] flex items-center justify-center">
                 <span className="text-6xl">{template.icon}</span>
               </div>
               
               {/* Template Info */}
               <div className="p-5">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-[#11142D] group-hover:text-[#7C3AED] transition-colors">
+                  <h3 className="font-semibold text-[#11142D] group-hover:text-[#1a1a2e] transition-colors">
                     {template.name}
                   </h3>
                   <span className={`px-2 py-0.5 rounded text-xs font-medium ${
@@ -115,7 +115,7 @@ export default function TemplatesPage() {
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex gap-1">
                     {(template.tech_stack || []).slice(0, 3).map((tech, i) => (
-                      <span key={i} className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs">
+                      <span key={i} className="px-2 py-1 bg-[#F7F8FA] text-[#808191] rounded text-xs">
                         {tech}
                       </span>
                     ))}
@@ -126,7 +126,7 @@ export default function TemplatesPage() {
                 {/* CTA */}
                 <Link
                   href={`/?template=${template.id}`}
-                  className="mt-4 block w-full text-center px-4 py-2 bg-[#7C3AED] text-white rounded-xl font-medium hover:bg-[#6D28D9] transition-colors"
+                  className="mt-4 block w-full text-center px-4 py-2 bg-[#1a1a2e] text-white rounded-lg font-medium hover:bg-[#2d2d4a] transition-colors"
                 >
                   Use This Template
                 </Link>

@@ -89,12 +89,12 @@ export default function ElevatePage() {
         actions={
           <button
             onClick={() => setShowNewProject(true)}
-            className="px-4 py-2 bg-[#7C3AED] text-white rounded-xl font-medium hover:bg-[#6D28D9] transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-[#1a1a2e] text-white rounded-lg font-medium hover:bg-[#2d2d4a] transition-colors flex items-center gap-2"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            New Project
+            New
           </button>
         }
       />
@@ -102,14 +102,14 @@ export default function ElevatePage() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total Projects', value: projects.length, color: '#7C3AED', bg: 'bg-purple-50' },
-          { label: 'In Research', value: projects.filter(p => p.status === 'research').length, color: '#8B5CF6', bg: 'bg-violet-50' },
-          { label: 'Building', value: projects.filter(p => p.status === 'building').length, color: '#3B82F6', bg: 'bg-blue-50' },
-          { label: 'Live', value: projects.filter(p => p.status === 'live').length, color: '#10B981', bg: 'bg-green-50' },
+          { label: 'Total Projects', value: projects.length },
+          { label: 'In Research', value: projects.filter(p => p.status === 'research').length },
+          { label: 'Building', value: projects.filter(p => p.status === 'building').length },
+          { label: 'Live', value: projects.filter(p => p.status === 'live').length },
         ].map((stat) => (
-          <div key={stat.label} className={`rounded-xl p-5 border border-[#E4E4E4] ${stat.bg}`}>
+          <div key={stat.label} className="bg-white rounded-xl p-5 border border-[#E4E4E4]">
             <p className="text-[#808191] text-sm">{stat.label}</p>
-            <p className="text-3xl font-bold mt-1" style={{ color: stat.color }}>{stat.value}</p>
+            <p className="text-3xl font-bold mt-1 text-[#11142D]">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -134,7 +134,7 @@ export default function ElevatePage() {
             <p className="text-[#808191] mb-4">Start by creating your first app project</p>
             <button
               onClick={() => setShowNewProject(true)}
-              className="px-4 py-2 bg-[#7C3AED] text-white rounded-xl font-medium hover:bg-[#6D28D9] transition-colors"
+              className="px-4 py-2 bg-[#1a1a2e] text-white rounded-lg font-medium hover:bg-[#2d2d4a] transition-colors"
             >
               Create Your First Project
             </button>
@@ -147,10 +147,10 @@ export default function ElevatePage() {
                 <Link
                   key={project.id}
                   href={`/projects/${project.id}`}
-                  className="bg-white rounded-xl border border-[#E4E4E4] p-5 hover:border-[#7C3AED] hover:shadow-lg transition-all group"
+                  className="bg-white rounded-xl border border-[#E4E4E4] p-5 hover:border-[#11142D] hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#7C3AED] to-[#A855F7] rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[#1a1a2e] rounded-xl flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
@@ -160,7 +160,7 @@ export default function ElevatePage() {
                     </span>
                   </div>
                   
-                  <h3 className="font-semibold text-[#11142D] mb-1 group-hover:text-[#7C3AED] transition-colors">
+                  <h3 className="font-semibold text-[#11142D] mb-1 group-hover:text-[#1a1a2e] transition-colors">
                     {project.name}
                   </h3>
                   
@@ -174,9 +174,9 @@ export default function ElevatePage() {
                       <span className="text-[#808191]">Progress</span>
                       <span className="font-medium text-[#11142D]">{project.progress}%</span>
                     </div>
-                    <div className="h-2 bg-[#F7F8FA] rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-[#E4E4E4] rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-full transition-all"
+                        className="h-full bg-[#1a1a2e] rounded-full transition-all"
                         style={{ width: `${project.progress}%` }}
                       />
                     </div>
@@ -196,7 +196,7 @@ export default function ElevatePage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-[#11142D]">App Templates</h2>
-          <Link href="/templates" className="text-[#7C3AED] text-sm font-medium hover:underline">
+          <Link href="/templates" className="text-[#808191] text-sm font-medium hover:text-[#11142D]">
             View All
           </Link>
         </div>
@@ -205,7 +205,7 @@ export default function ElevatePage() {
           {templates.slice(0, 4).map((template) => (
             <div
               key={template.id}
-              className="bg-white rounded-xl border border-[#E4E4E4] p-4 hover:border-[#7C3AED] hover:shadow-lg transition-all cursor-pointer"
+              className="bg-white rounded-xl border border-[#E4E4E4] p-4 hover:border-[#11142D] hover:shadow-md transition-all cursor-pointer"
               onClick={() => {
                 setSelectedTemplate(template.id);
                 setShowNewProject(true);
@@ -252,7 +252,7 @@ export default function ElevatePage() {
                 <div
                   onClick={() => setSelectedTemplate(null)}
                   className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                    selectedTemplate === null ? 'border-[#7C3AED] bg-[#7C3AED]/5' : 'border-[#E4E4E4] hover:border-[#7C3AED]'
+                    selectedTemplate === null ? 'border-[#11142D] bg-[#F7F8FA]' : 'border-[#E4E4E4] hover:border-[#11142D]'
                   }`}
                 >
                   <div className="text-xl mb-1">📝</div>
@@ -263,7 +263,7 @@ export default function ElevatePage() {
                     key={template.id}
                     onClick={() => setSelectedTemplate(template.id)}
                     className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                      selectedTemplate === template.id ? 'border-[#7C3AED] bg-[#7C3AED]/5' : 'border-[#E4E4E4] hover:border-[#7C3AED]'
+                      selectedTemplate === template.id ? 'border-[#11142D] bg-[#F7F8FA]' : 'border-[#E4E4E4] hover:border-[#11142D]'
                     }`}
                   >
                     <div className="text-xl mb-1">{template.icon}</div>
@@ -287,7 +287,7 @@ export default function ElevatePage() {
               <button
                 onClick={createProject}
                 disabled={!newProjectName.trim()}
-                className="flex-1 px-4 py-3 bg-[#7C3AED] text-white rounded-xl font-medium hover:bg-[#6D28D9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-3 bg-[#1a1a2e] text-white rounded-xl font-medium hover:bg-[#2d2d4a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create Project
               </button>
