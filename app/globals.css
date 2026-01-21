@@ -3,9 +3,9 @@
 :root {
   --background: #F5F7FA;
   --foreground: #11142D;
-  --primary: #14B8A6;
-  --primary-dark: #0D9488;
-  --primary-light: #CCFBF1;
+  --primary: #47A8DF;
+  --primary-dark: #3B96C9;
+  --primary-light: #E0F2FE;
   --muted: #6B7280;
   --border: #E5E7EB;
   
@@ -13,7 +13,7 @@
   --sidebar-bg: #FFFFFF;
   --sidebar-border: #E5E7EB;
   --sidebar-text: #6B7280;
-  --sidebar-text-active: #14B8A6;
+  --sidebar-text-active: #47A8DF;
   --sidebar-hover: #F9FAFB;
   
   /* Status colors */

@@ -51,7 +51,7 @@ export default function TemplatesPage() {
             onClick={() => setFilter(cat)}
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
               filter === cat
-                ? 'bg-teal-500 text-white'
+                ? 'bg-[#47A8DF] text-white'
                 : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#11142D]'
             }`}
           >
@@ -126,7 +126,7 @@ export default function TemplatesPage() {
                 {/* CTA */}
                 <Link
                   href={`/?template=${template.id}`}
-                  className="mt-4 block w-full text-center px-4 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors"
+                  className="mt-4 block w-full text-center px-4 py-2 bg-[#47A8DF] text-white rounded-lg font-medium hover:bg-[#3B96C9] transition-colors"
                 >
                   Use This Template
                 </Link>

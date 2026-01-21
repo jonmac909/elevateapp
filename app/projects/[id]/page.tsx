@@ -176,7 +176,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/" aria-label="Back to projects" className="text-[#808191] hover:text-[#11142D] focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 rounded-lg">
+        <Link href="/" aria-label="Back to projects" className="text-[#808191] hover:text-[#11142D] focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2 rounded-lg">
           <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -247,7 +247,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       {agentRunning && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 text-center max-w-md">
-            <div className="size-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="size-12 border-4 border-[#47A8DF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <h3 className="text-lg font-semibold text-[#11142D] mb-2">Running {agentRunning.replace(/_/g, ' ')}</h3>
             <p className="text-sm text-[#808191]">This may take a moment...</p>
           </div>
@@ -265,7 +265,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               <button
                 onClick={() => setAgentResult(null)}
                 aria-label="Close results"
-                className="p-2 hover:bg-[#F7F8FA] rounded-lg focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+                className="p-2 hover:bg-[#F7F8FA] rounded-lg focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
               >
                 <svg className="size-5 text-[#808191]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -282,7 +282,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             <div className="p-4 border-t border-[#E4E4E4]">
               <button
                 onClick={() => setAgentResult(null)}
-                className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600"
+                className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg font-medium hover:bg-[#3B96C9]"
               >
                 Close
               </button>
@@ -370,7 +370,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
         <h3 className="text-lg font-semibold text-[#11142D]">Customer DNA</h3>
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600"
+          className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
         >
           Save Changes
         </button>
@@ -384,7 +384,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
             value={formData.target_market || ''}
             onChange={(e) => handleChange('target_market', e.target.value)}
             placeholder="e.g., First-time course creators with less than 100 students"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           />
         </div>
         <div>
@@ -394,7 +394,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
             value={formData.demographics || ''}
             onChange={(e) => handleChange('demographics', e.target.value)}
             placeholder="e.g., 25-45, US-based, $50k-150k income"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           />
         </div>
       </div>
@@ -406,7 +406,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
           onChange={(e) => handleChange('main_problem', e.target.value)}
           placeholder="Describe the core problem your app solves in visceral detail..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
         />
       </div>
 
@@ -416,7 +416,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
           {onRunAgent && (
             <button
               onClick={() => onRunAgent('transformation_mapper')}
-              className="px-3 py-1.5 bg-teal-500 text-white rounded-lg text-xs font-medium hover:bg-teal-600"
+              className="px-3 py-1.5 bg-[#47A8DF] text-white rounded-lg text-xs font-medium hover:bg-[#3B96C9]"
             >
               Generate with AI
             </button>
@@ -541,7 +541,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
         <h3 className="text-lg font-semibold text-[#11142D]">App DNA</h3>
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600"
+          className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
         >
           Save Changes
         </button>
@@ -555,7 +555,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
             value={formData.name || ''}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="e.g., CourseBot Pro"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           />
         </div>
         <div>
@@ -565,7 +565,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
             value={formData.tagline || ''}
             onChange={(e) => handleChange('tagline', e.target.value)}
             placeholder="e.g., Your 24/7 student support team"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           />
         </div>
       </div>
@@ -577,7 +577,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
           onChange={(e) => handleChange('problem_solved', e.target.value)}
           placeholder="Describe the core problem your app solves..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
         />
       </div>
 
@@ -615,7 +615,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
           value={formData.deploy_url || ''}
           onChange={(e) => handleChange('deploy_url', e.target.value)}
           placeholder="https://your-app.vercel.app"
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
         />
       </div>
     </div>
@@ -644,7 +644,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
         <h3 className="text-lg font-semibold text-[#11142D]">Brand DNA</h3>
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600"
+          className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
         >
           Save Changes
         </button>
@@ -657,7 +657,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           onChange={(e) => handleChange('your_story', e.target.value)}
           placeholder="Share your journey... Why are you the right person to build this? What experience do you bring?"
           rows={4}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
         />
       </div>
 
@@ -668,7 +668,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           onChange={(e) => handleChange('credentials', e.target.value)}
           placeholder="List your relevant credentials, experience, results you've achieved..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
         />
       </div>
 
@@ -678,7 +678,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           <select
             value={formData.voice_tone || ''}
             onChange={(e) => handleChange('voice_tone', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           >
             <option value="">Select tone...</option>
             <option value="casual">Casual & Friendly</option>
@@ -695,7 +695,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
             value={(formData.banned_words || []).join(', ')}
             onChange={(e) => handleChange('banned_words', e.target.value.split(',').map(w => w.trim()))}
             placeholder="e.g., synergy, guru, hack, ninja"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           />
         </div>
       </div>
@@ -717,7 +717,7 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
           <p className="text-sm text-[#808191] mb-3">Analyze market size, competition, and demand score</p>
           <button
             onClick={() => onRunAgent('app_idea_validator')}
-            className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
           >
             Run Validator
           </button>
@@ -729,7 +729,7 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
           <p className="text-sm text-[#808191] mb-3">Discover top pain points, solutions, and gaps</p>
           <button
             onClick={() => onRunAgent('niche_analyzer')}
-            className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
           >
             Analyze Niche
           </button>
@@ -741,7 +741,7 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
           <p className="text-sm text-[#808191] mb-3">Analyze competitor features, pricing, and weaknesses</p>
           <button
             onClick={() => onRunAgent('competitor_xray')}
-            className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
           >
             X-Ray Competitor
           </button>
@@ -771,7 +771,7 @@ function BuildTab({ project }: { project: Project }) {
             { step: 6, title: 'Deploy', desc: 'Deploy to Vercel or Cloudflare' },
           ].map((item) => (
             <div key={item.step} className="flex items-center gap-3 p-3 bg-white rounded-lg">
-              <div className="size-8 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="size-8 bg-[#47A8DF] text-white rounded-full flex items-center justify-center text-sm font-bold">
                 {item.step}
               </div>
               <div>
@@ -813,7 +813,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
           <p className="text-sm text-[#808191] mb-3">Generate a complete landing page with 13 blocks</p>
           <button
             onClick={() => onRunAgent('landing_page_generator')}
-            className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
           >
             Generate Page
           </button>
@@ -825,7 +825,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
           <p className="text-sm text-[#808191] mb-3">Generate daily content for your launch</p>
           <button
             onClick={() => onRunAgent('launch_sequence_generator')}
-            className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
           >
             Generate Sequence
           </button>
@@ -837,7 +837,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
           <p className="text-sm text-[#808191] mb-3">Create your pricing and bonus stack</p>
           <button
             onClick={() => onRunAgent('offer_builder')}
-            className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
           >
             Build Offer
           </button>
@@ -882,7 +882,7 @@ function CopyTab({ project, onRunAgent, agentRunning }: { project: Project; onRu
             <p className="text-sm text-[#808191] mb-3">{agent.desc}</p>
             <button
               onClick={() => onRunAgent(agent.type)}
-              className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600"
+              className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
             >
               Generate
             </button>

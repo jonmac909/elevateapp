@@ -72,7 +72,7 @@ export default function WizardModal({
             <button
               onClick={onClose}
               aria-label="Close"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
             >
               <svg className="size-5 text-[#808191]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

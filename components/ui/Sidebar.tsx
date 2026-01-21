@@ -126,7 +126,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="p-4 border-b border-gray-100">
         <Link href="/" className="flex items-center gap-3">
-          <div className="size-10 bg-teal-500 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="size-10 bg-[#47A8DF] rounded-xl flex items-center justify-center flex-shrink-0">
             <svg className="size-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -159,7 +159,7 @@ export default function Sidebar() {
                       href={item.href}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all relative ${
                         isActive
-                          ? 'text-teal-500 bg-teal-50 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-6 before:bg-teal-500 before:rounded-r'
+                          ? 'text-[#47A8DF] bg-sky-50 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-6 before:bg-[#47A8DF] before:rounded-r'
                           : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                       }`}
                       title={collapsed ? item.name : undefined}
@@ -204,7 +204,7 @@ export default function Sidebar() {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-100">
-        <button aria-label="Logout" className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+        <button aria-label="Logout" className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2">
           <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
