@@ -226,43 +226,6 @@ export default function ElevatePage() {
         )}
       </div>
 
-      {/* Templates Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[#11142D]">App Templates</h2>
-          <Link href="/templates" className="text-[#808191] text-sm font-medium hover:text-[#11142D]">
-            View All
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-4 gap-4">
-          {templates.slice(0, 4).map((template) => (
-            <div
-              key={template.id}
-              className="bg-white rounded-xl border border-[#E4E4E4] p-4 hover:border-[#47A8DF] hover:shadow-md transition-all cursor-pointer"
-              onClick={() => {
-                setSelectedTemplate(template.id);
-                setShowNewProject(true);
-              }}
-            >
-              <div className="text-3xl mb-2">{template.icon}</div>
-              <h3 className="font-medium text-[#11142D] text-sm mb-1">{template.name}</h3>
-              <p className="text-xs text-[#808191] line-clamp-2">{template.description}</p>
-              <div className="mt-2 flex items-center gap-2">
-                <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
-                  template.difficulty === 'beginner' ? 'bg-green-100 text-green-700' :
-                  template.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-700' :
-                  'bg-red-100 text-red-700'
-                }`}>
-                  {template.difficulty}
-                </span>
-                <span className="text-[10px] text-[#808191]">{template.estimated_hours}h</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* New Project Modal */}
       {showNewProject && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
