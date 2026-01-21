@@ -78,6 +78,29 @@ export default function ElevatePage() {
 
   const getStatusColor = (status: ProjectStatus) => STATUS_COLORS[status] || STATUS_COLORS.research;
 
+  const deleteProject = async (e: React.MouseEvent, projectId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!confirm('Are you sure you want to delete this project?')) return;
+    
+    try {
+      const res = await fetch(`/api/elevate/projects/${projectId}`, {
+        method: 'DELETE',
+      });
+      
+      if (res.ok) {
+        addToast('Project deleted successfully', 'success');
+        fetchData();
+      } else {
+        addToast('Failed to delete project', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      addToast('Failed to delete project', 'error');
+    }
+  };
+
   return (
     <div className="p-8">
       {/* Header */}
@@ -147,7 +170,7 @@ export default function ElevatePage() {
                 <Link
                   key={project.id}
                   href={`/projects/${project.id}`}
-                  className="bg-white rounded-xl border border-[#E4E4E4] p-5 hover:border-[#11142D] hover:shadow-md transition-all group"
+                  className="bg-white rounded-xl border border-[#E4E4E4] p-5 hover:border-[#47A8DF] hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="size-10 bg-[#47A8DF] rounded-xl flex items-center justify-center">
@@ -155,9 +178,20 @@ export default function ElevatePage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
-                    <span className={`px-2 py-1 rounded-lg text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}>
-                      {statusStyle.label}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded-lg text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}>
+                        {statusStyle.label}
+                      </span>
+                      <button
+                        onClick={(e) => deleteProject(e, project.id)}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                        aria-label="Delete project"
+                      >
+                        <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   
                   <h3 className="font-semibold text-[#11142D] mb-1 group-hover:text-[#1a1a2e] transition-colors">
@@ -205,7 +239,7 @@ export default function ElevatePage() {
           {templates.slice(0, 4).map((template) => (
             <div
               key={template.id}
-              className="bg-white rounded-xl border border-[#E4E4E4] p-4 hover:border-[#11142D] hover:shadow-md transition-all cursor-pointer"
+              className="bg-white rounded-xl border border-[#E4E4E4] p-4 hover:border-[#47A8DF] hover:shadow-md transition-all cursor-pointer"
               onClick={() => {
                 setSelectedTemplate(template.id);
                 setShowNewProject(true);
@@ -252,7 +286,7 @@ export default function ElevatePage() {
                 <div
                   onClick={() => setSelectedTemplate(null)}
                   className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                    selectedTemplate === null ? 'border-[#11142D] bg-[#F7F8FA]' : 'border-[#E4E4E4] hover:border-[#11142D]'
+                    selectedTemplate === null ? 'border-[#47A8DF] bg-[#F7F8FA]' : 'border-[#E4E4E4] hover:border-[#47A8DF]'
                   }`}
                 >
                   <div className="text-xl mb-1">📝</div>
@@ -263,7 +297,7 @@ export default function ElevatePage() {
                     key={template.id}
                     onClick={() => setSelectedTemplate(template.id)}
                     className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                      selectedTemplate === template.id ? 'border-[#11142D] bg-[#F7F8FA]' : 'border-[#E4E4E4] hover:border-[#11142D]'
+                      selectedTemplate === template.id ? 'border-[#47A8DF] bg-[#F7F8FA]' : 'border-[#E4E4E4] hover:border-[#47A8DF]'
                     }`}
                   >
                     <div className="text-xl mb-1">{template.icon}</div>

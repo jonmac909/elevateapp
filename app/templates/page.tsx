@@ -52,7 +52,7 @@ export default function TemplatesPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
               filter === cat
                 ? 'bg-[#47A8DF] text-white'
-                : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#11142D]'
+                : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#47A8DF]'
             }`}
           >
             {cat === 'all' ? 'All Templates' : cat}
@@ -71,7 +71,7 @@ export default function TemplatesPage() {
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="bg-white rounded-xl border border-[#E4E4E4] overflow-hidden hover:border-[#11142D] hover:shadow-md transition-all group"
+              className="bg-white rounded-xl border border-[#E4E4E4] overflow-hidden hover:border-[#47A8DF] hover:shadow-md transition-all group"
             >
               {/* Template Preview */}
               <div className="h-40 bg-[#F7F8FA] flex items-center justify-center">

@@ -711,7 +711,7 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
       <p className="text-[#808191]">Use these AI agents to validate your app idea before building.</p>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
           <div className="text-2xl mb-2">🔍</div>
           <h4 className="font-semibold text-[#11142D] mb-1">App Idea Validator</h4>
           <p className="text-sm text-[#808191] mb-3">Analyze market size, competition, and demand score</p>
@@ -723,7 +723,7 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
           <div className="text-2xl mb-2">📊</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Niche Analyzer</h4>
           <p className="text-sm text-[#808191] mb-3">Discover top pain points, solutions, and gaps</p>
@@ -735,7 +735,7 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
           <div className="text-2xl mb-2">🎯</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Competitor X-Ray</h4>
           <p className="text-sm text-[#808191] mb-3">Analyze competitor features, pricing, and weaknesses</p>
@@ -807,7 +807,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
       <h3 className="text-lg font-semibold text-[#11142D]">Launch Command Center</h3>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
           <div className="text-2xl mb-2">📄</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Landing Page Generator</h4>
           <p className="text-sm text-[#808191] mb-3">Generate a complete landing page with 13 blocks</p>
@@ -819,7 +819,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
           <div className="text-2xl mb-2">📅</div>
           <h4 className="font-semibold text-[#11142D] mb-1">7-Day Launch Sequence</h4>
           <p className="text-sm text-[#808191] mb-3">Generate daily content for your launch</p>
@@ -831,7 +831,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
           <div className="text-2xl mb-2">💰</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Offer Builder</h4>
           <p className="text-sm text-[#808191] mb-3">Create your pricing and bonus stack</p>
@@ -876,7 +876,7 @@ function CopyTab({ project, onRunAgent, agentRunning }: { project: Project; onRu
           { type: 'objection_handler', icon: '🛡️', name: 'Objection Handlers', desc: 'FAQ and rebuttals' },
           { type: 'case_study_generator', icon: '⭐', name: 'Case Studies', desc: 'Turn results into stories' },
         ].map((agent) => (
-          <div key={agent.type} className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
+          <div key={agent.type} className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
             <div className="text-2xl mb-2">{agent.icon}</div>
             <h4 className="font-semibold text-[#11142D] mb-1">{agent.name}</h4>
             <p className="text-sm text-[#808191] mb-3">{agent.desc}</p>
