@@ -549,7 +549,8 @@ export async function POST(request: NextRequest) {
           .eq('id', project.customer_dna.id);
       }
     } else {
-      // Store as copy asset
+      // Store as copy asset - use valid types from database constraint
+      // Valid types: vsl, case_study, email_welcome, headlines, objections, ad_facebook
       const typeMapping: Record<string, string> = {
         vsl_writer: 'vsl',
         email_generator: 'email_welcome',
@@ -557,12 +558,12 @@ export async function POST(request: NextRequest) {
         objection_handler: 'objections',
         ad_copy_generator: 'ad_facebook',
         case_study_generator: 'case_study',
-        app_idea_validator: 'research',
-        niche_analyzer: 'research',
-        competitor_xray: 'research',
+        app_idea_validator: 'case_study',  // Using case_study for research results
+        niche_analyzer: 'case_study',
+        competitor_xray: 'case_study',
       };
       
-      const copyType = typeMapping[agent_type] || 'research';
+      const copyType = typeMapping[agent_type] || 'vsl';
       const contentToSave = typeof outputData === 'string' ? outputData : JSON.stringify(outputData, null, 2);
       console.log(`Saving copy_asset for ${agent_type}, project_id: ${project_id}, content length: ${contentToSave.length}`);
       const { data: savedAsset, error: copyError } = await supabase.from('elevate_copy_assets').insert({
