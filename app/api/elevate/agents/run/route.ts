@@ -290,6 +290,53 @@ For each dimension, provide:
 - Language they would actually use
 
 Output as JSON with before and after objects, each containing emotional_state, core_fear, daily_experience, and self_identity fields.`,
+
+  fill_app_dna: (ctx) => `You are an app strategist. Based on this app name, generate a complete App DNA profile.
+
+App Name: ${ctx.app_name || 'Not specified'}
+
+Generate a complete app profile with:
+1. tagline - A catchy one-liner (max 10 words)
+2. problem_solved - The core problem this app solves (2-3 sentences)
+3. unique_mechanism - What makes this approach unique (1-2 sentences)
+4. unique_mechanism_description - Detailed explanation of the mechanism (2-3 sentences)
+5. features - Array of 3-5 key features, each with "name" and "description"
+6. tech_stack - Array of recommended technologies (e.g., ["Next.js", "Supabase", "Tailwind CSS"])
+
+Output as JSON with these exact field names.`,
+
+  fill_brand_dna: (ctx) => `You are a brand strategist. Based on this app, generate a complete Brand DNA profile.
+
+App Name: ${ctx.app_name || 'Not specified'}
+App Description: ${ctx.problem || ctx.tagline || 'Not specified'}
+
+Generate a brand profile with:
+1. your_story - A compelling founder story for someone building this app (2-3 paragraphs, first person)
+2. credentials - Relevant experience/credentials that would make someone credible (bullet points as a string)
+3. voice_tone - One of: "casual", "professional", "authoritative", "friendly", "inspirational"
+4. banned_words - Array of 5-10 words/phrases to avoid (cliches, overused terms)
+
+Output as JSON with these exact field names.`,
+
+  fill_customer_dna: (ctx) => `You are a customer research expert. Based on this app, generate a complete Customer DNA profile.
+
+App Name: ${ctx.app_name || 'Not specified'}
+App Description: ${ctx.problem || ctx.tagline || 'Not specified'}
+
+Generate a detailed customer profile with:
+1. target_market - Specific description of ideal customer (1-2 sentences)
+2. demographics - Age, location, income level, occupation (comma-separated)
+3. main_problem - The visceral, emotional problem they face (2-3 sentences, use their language)
+4. before_emotional_state - How they feel daily dealing with this problem
+5. before_core_fear - Their deepest fear about this problem
+6. before_daily_experience - What their typical day looks like
+7. before_self_identity - How they see themselves (often negative)
+8. after_emotional_state - How they'll feel after using the app
+9. after_core_fear - The new belief that replaces their fear  
+10. after_daily_experience - What their new normal looks like
+11. after_self_identity - Their new identity/self-image
+
+Output as JSON with these exact field names. Use vivid, emotional language.`,
 };
 
 export async function POST(request: NextRequest) {
@@ -364,7 +411,7 @@ export async function POST(request: NextRequest) {
     const prompt = promptGenerator(context);
     
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-opus-4-20250514',
       max_tokens: 4096,
       messages: [
         {
@@ -447,6 +494,54 @@ export async function POST(request: NextRequest) {
             after_core_fear: afterData.core_fear,
             after_daily_experience: afterData.daily_experience,
             after_self_identity: afterData.self_identity,
+          })
+          .eq('id', project.customer_dna.id);
+      }
+    } else if (agent_type === 'fill_app_dna') {
+      // Update app DNA with generated data
+      if (project.app_dna?.id) {
+        await supabase
+          .from('elevate_app_dnas')
+          .update({
+            tagline: outputData.tagline,
+            problem_solved: outputData.problem_solved,
+            unique_mechanism: outputData.unique_mechanism,
+            unique_mechanism_description: outputData.unique_mechanism_description,
+            features: outputData.features,
+            tech_stack: outputData.tech_stack,
+          })
+          .eq('id', project.app_dna.id);
+      }
+    } else if (agent_type === 'fill_brand_dna') {
+      // Update brand DNA with generated data
+      if (project.brand_dna?.id) {
+        await supabase
+          .from('elevate_brand_dnas')
+          .update({
+            your_story: outputData.your_story,
+            credentials: outputData.credentials,
+            voice_tone: outputData.voice_tone,
+            banned_words: outputData.banned_words,
+          })
+          .eq('id', project.brand_dna.id);
+      }
+    } else if (agent_type === 'fill_customer_dna') {
+      // Update customer DNA with generated data
+      if (project.customer_dna?.id) {
+        await supabase
+          .from('elevate_customer_dnas')
+          .update({
+            target_market: outputData.target_market,
+            demographics: outputData.demographics,
+            main_problem: outputData.main_problem,
+            before_emotional_state: outputData.before_emotional_state,
+            before_core_fear: outputData.before_core_fear,
+            before_daily_experience: outputData.before_daily_experience,
+            before_self_identity: outputData.before_self_identity,
+            after_emotional_state: outputData.after_emotional_state,
+            after_core_fear: outputData.after_core_fear,
+            after_daily_experience: outputData.after_daily_experience,
+            after_self_identity: outputData.after_self_identity,
           })
           .eq('id', project.customer_dna.id);
       }

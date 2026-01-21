@@ -217,10 +217,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <CustomerDNATab dna={project.customer_dna} onUpdate={updateCustomerDNA} onRunAgent={runAgent} />
         )}
         {activeTab === 'app' && (
-          <AppDNATab dna={project.app_dna} onUpdate={updateAppDNA} />
+          <AppDNATab dna={project.app_dna} onUpdate={updateAppDNA} onRunAgent={runAgent} />
         )}
         {activeTab === 'brand' && (
-          <BrandDNATab dna={project.brand_dna} onUpdate={updateBrandDNA} />
+          <BrandDNATab dna={project.brand_dna} onUpdate={updateBrandDNA} onRunAgent={runAgent} />
         )}
         {activeTab === 'research' && (
           <ResearchTab project={project} onRunAgent={runAgent} />
@@ -361,12 +361,22 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-[#11142D]">Customer DNA</h3>
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
-        >
-          Save Changes
-        </button>
+        <div className="flex gap-2">
+          {onRunAgent && (
+            <button
+              onClick={() => onRunAgent('fill_customer_dna')}
+              className="px-4 py-2 border border-[#47A8DF] text-[#47A8DF] rounded-xl font-medium hover:bg-[#47A8DF] hover:text-white transition-colors"
+            >
+              ✨ Fill with AI
+            </button>
+          )}
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -513,7 +523,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
 }
 
 // App DNA Tab
-function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partial<AppDNA>) => void }) {
+function AppDNATab({ dna, onUpdate, onRunAgent }: { dna?: AppDNA; onUpdate: (updates: Partial<AppDNA>) => void; onRunAgent?: (type: string) => void }) {
   const [formData, setFormData] = useState<Partial<AppDNA>>(dna || {});
 
   useEffect(() => {
@@ -532,12 +542,22 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-[#11142D]">App DNA</h3>
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
-        >
-          Save Changes
-        </button>
+        <div className="flex gap-2">
+          {onRunAgent && (
+            <button
+              onClick={() => onRunAgent('fill_app_dna')}
+              className="px-4 py-2 border border-[#47A8DF] text-[#47A8DF] rounded-xl font-medium hover:bg-[#47A8DF] hover:text-white transition-colors"
+            >
+              ✨ Fill with AI
+            </button>
+          )}
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -606,7 +626,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
 }
 
 // Brand DNA Tab
-function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Partial<BrandDNA>) => void }) {
+function BrandDNATab({ dna, onUpdate, onRunAgent }: { dna?: BrandDNA; onUpdate: (updates: Partial<BrandDNA>) => void; onRunAgent?: (type: string) => void }) {
   const [formData, setFormData] = useState<Partial<BrandDNA>>(dna || {});
 
   useEffect(() => {
@@ -625,12 +645,22 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-[#11142D]">Brand DNA</h3>
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
-        >
-          Save Changes
-        </button>
+        <div className="flex gap-2">
+          {onRunAgent && (
+            <button
+              onClick={() => onRunAgent('fill_brand_dna')}
+              className="px-4 py-2 border border-[#47A8DF] text-[#47A8DF] rounded-xl font-medium hover:bg-[#47A8DF] hover:text-white transition-colors"
+            >
+              ✨ Fill with AI
+            </button>
+          )}
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
 
       <div>
