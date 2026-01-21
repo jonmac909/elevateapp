@@ -1,4 +1,5 @@
 export { default as Sidebar } from './Sidebar';
+export { SidebarProvider, useSidebar } from './SidebarContext';
 export { ToastProvider, useToast } from './Toast';
 export { default as LoadingState, LoadingSpinner } from './LoadingState';
 export { default as StatusBadge, TabStatusIcon } from './StatusBadge';

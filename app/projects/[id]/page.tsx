@@ -772,8 +772,9 @@ function BrandDNATab({ dna, onUpdate, onRunAgent }: { dna?: BrandDNA; onUpdate: 
 
 // Research Tab
 function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (type: string) => void }) {
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  
   const getResearchContent = (agentType: string) => {
-    // Get the most recent asset with this name (sorted by created_at descending)
     const assets = project.copy_assets?.filter(a => a.name === `Generated ${agentType}`) || [];
     const asset = assets.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
     if (!asset) return null;
@@ -783,6 +784,10 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
     } catch {
       return asset.content;
     }
+  };
+
+  const toggleExpand = (type: string) => {
+    setExpanded(prev => ({ ...prev, [type]: !prev[type] }));
   };
 
   const agents = [
@@ -796,9 +801,10 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
       <h3 className="text-lg font-semibold text-[#11142D]">Research Agents</h3>
       <p className="text-[#808191]">Use these AI agents to validate your app idea before building.</p>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {agents.map((agent) => {
           const content = getResearchContent(agent.type);
+          const isExpanded = expanded[agent.type] ?? false;
           return (
             <div key={agent.type} className="border border-[#E4E4E4] rounded-xl overflow-hidden">
               <div className="p-4 bg-[#F7F8FA] flex items-center justify-between">
@@ -809,14 +815,32 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
                     <p className="text-sm text-[#808191]">{agent.desc}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => onRunAgent(agent.type)}
-                  className="px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
-                >
-                  {content ? 'Re-run' : agent.btn}
-                </button>
+                <div className="flex items-center gap-2">
+                  {content && (
+                    <button
+                      onClick={() => toggleExpand(agent.type)}
+                      className="px-3 py-2 text-[#808191] hover:text-[#11142D] hover:bg-white rounded-lg text-sm font-medium flex items-center gap-1"
+                    >
+                      <svg 
+                        className={`size-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                      {isExpanded ? 'Collapse' : 'View Results'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => onRunAgent(agent.type)}
+                    className="px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
+                  >
+                    {content ? 'Re-run' : agent.btn}
+                  </button>
+                </div>
               </div>
-              {content && (
+              {content && isExpanded && (
                 <div className="p-4 border-t border-[#E4E4E4] max-h-[600px] overflow-y-auto">
                   <ReactMarkdown 
                     remarkPlugins={[remarkGfm]}

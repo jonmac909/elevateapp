@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { Sidebar, ToastProvider } from "@/components/ui";
+import { Sidebar, SidebarProvider, ToastProvider } from "@/components/ui";
+import { MainContent } from "@/components/ui/MainContent";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -41,15 +42,17 @@ export default function RootLayout({
       </head>
       <body className={`${plusJakarta.className} antialiased`}>
         <ToastProvider>
-          <div className="min-h-dvh flex">
-            {/* Sidebar */}
-            <Sidebar />
-            
-            {/* Main Content */}
-            <main className="flex-1 ml-64 transition-all duration-300">
-              {children}
-            </main>
-          </div>
+          <SidebarProvider>
+            <div className="min-h-dvh flex">
+              {/* Sidebar */}
+              <Sidebar />
+              
+              {/* Main Content */}
+              <MainContent>
+                {children}
+              </MainContent>
+            </div>
+          </SidebarProvider>
         </ToastProvider>
       </body>
     </html>
