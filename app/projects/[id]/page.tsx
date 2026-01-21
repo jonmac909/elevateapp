@@ -2,28 +2,22 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { Project, CustomerDNA, AppDNA, BrandDNA, ProjectStatus, LAUNCH_DAY_THEMES } from '@/lib/elevate-types';
+import { Project, CustomerDNA, AppDNA, BrandDNA, LAUNCH_DAY_THEMES } from '@/lib/elevate-types';
 
-type Tab = 'overview' | 'customer' | 'app' | 'brand' | 'research' | 'build' | 'launch' | 'copy';
+type Tab = 'overview' | 'research' | 'customer' | 'app' | 'brand' | 'build' | 'launch' | 'marketing';
 
-const TABS: { id: Tab; name: string; icon: string }[] = [
-  { id: 'overview', name: 'Overview', icon: '📊' },
-  { id: 'customer', name: 'Customer DNA', icon: '👤' },
-  { id: 'app', name: 'App DNA', icon: '⚡' },
-  { id: 'brand', name: 'Brand DNA', icon: '🎨' },
-  { id: 'research', name: 'Research', icon: '🔍' },
-  { id: 'build', name: 'Build', icon: '🔨' },
-  { id: 'launch', name: 'Launch', icon: '🚀' },
-  { id: 'copy', name: 'Copy', icon: '✍️' },
+const TABS: { id: Tab; name: string }[] = [
+  { id: 'overview', name: 'Overview' },
+  { id: 'research', name: 'Research' },
+  { id: 'customer', name: 'Customer' },
+  { id: 'app', name: 'App' },
+  { id: 'brand', name: 'Brand' },
+  { id: 'build', name: 'Build' },
+  { id: 'launch', name: 'Launch' },
+  { id: 'marketing', name: 'Marketing' },
 ];
 
-const STATUS_OPTIONS: { value: ProjectStatus; label: string }[] = [
-  { value: 'research', label: 'Research' },
-  { value: 'building', label: 'Building' },
-  { value: 'launching', label: 'Launching' },
-  { value: 'live', label: 'Live' },
-  { value: 'archived', label: 'Archived' },
-];
+
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -185,15 +179,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <h1 className="text-2xl font-bold text-[#11142D]">{project.name}</h1>
           <p className="text-[#808191]">{project.app_dna?.tagline || 'Add a tagline in App DNA'}</p>
         </div>
-        <select
-          value={project.status}
-          onChange={(e) => updateProject({ status: e.target.value as ProjectStatus })}
-          className="px-4 py-2 rounded-xl border border-[#E4E4E4] bg-white text-sm font-medium"
-        >
-          {STATUS_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
         {saving && <span className="text-sm text-[#808191]">Saving...</span>}
       </div>
 
@@ -209,7 +194,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 : 'text-[#808191] hover:text-[#11142D]'
             }`}
           >
-            <span className="mr-1">{tab.icon}</span>
             {tab.name}
           </button>
         ))}
@@ -238,7 +222,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         {activeTab === 'launch' && (
           <LaunchTab project={project} onRunAgent={runAgent} />
         )}
-        {activeTab === 'copy' && (
+        {activeTab === 'marketing' && (
           <CopyTab project={project} onRunAgent={runAgent} agentRunning={agentRunning} />
         )}
       </div>
