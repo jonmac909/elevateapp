@@ -242,7 +242,7 @@ export default function ElevatePage() {
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 placeholder="e.g., AI Support Bot for Course Creators"
-                className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
               />
             </div>
             

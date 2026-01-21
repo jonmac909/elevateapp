@@ -176,7 +176,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/" className="text-[#808191] hover:text-[#11142D]">
+        <Link href="/" aria-label="Back to projects" className="text-[#808191] hover:text-[#11142D] focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 rounded-lg">
           <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -264,7 +264,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               </h3>
               <button
                 onClick={() => setAgentResult(null)}
-                className="p-2 hover:bg-[#F7F8FA] rounded-lg"
+                aria-label="Close results"
+                className="p-2 hover:bg-[#F7F8FA] rounded-lg focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
               >
                 <svg className="size-5 text-[#808191]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -383,7 +384,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
             value={formData.target_market || ''}
             onChange={(e) => handleChange('target_market', e.target.value)}
             placeholder="e.g., First-time course creators with less than 100 students"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           />
         </div>
         <div>
@@ -393,7 +394,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
             value={formData.demographics || ''}
             onChange={(e) => handleChange('demographics', e.target.value)}
             placeholder="e.g., 25-45, US-based, $50k-150k income"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           />
         </div>
       </div>
@@ -405,7 +406,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
           onChange={(e) => handleChange('main_problem', e.target.value)}
           placeholder="Describe the core problem your app solves in visceral detail..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
         />
       </div>
 
@@ -554,7 +555,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
             value={formData.name || ''}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="e.g., CourseBot Pro"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           />
         </div>
         <div>
@@ -564,7 +565,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
             value={formData.tagline || ''}
             onChange={(e) => handleChange('tagline', e.target.value)}
             placeholder="e.g., Your 24/7 student support team"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           />
         </div>
       </div>
@@ -576,7 +577,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
           onChange={(e) => handleChange('problem_solved', e.target.value)}
           placeholder="Describe the core problem your app solves..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
         />
       </div>
 
@@ -614,7 +615,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
           value={formData.deploy_url || ''}
           onChange={(e) => handleChange('deploy_url', e.target.value)}
           placeholder="https://your-app.vercel.app"
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
         />
       </div>
     </div>
@@ -656,7 +657,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           onChange={(e) => handleChange('your_story', e.target.value)}
           placeholder="Share your journey... Why are you the right person to build this? What experience do you bring?"
           rows={4}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
         />
       </div>
 
@@ -667,7 +668,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           onChange={(e) => handleChange('credentials', e.target.value)}
           placeholder="List your relevant credentials, experience, results you've achieved..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
         />
       </div>
 
@@ -677,7 +678,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           <select
             value={formData.voice_tone || ''}
             onChange={(e) => handleChange('voice_tone', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           >
             <option value="">Select tone...</option>
             <option value="casual">Casual & Friendly</option>
@@ -694,7 +695,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
             value={(formData.banned_words || []).join(', ')}
             onChange={(e) => handleChange('banned_words', e.target.value.split(',').map(w => w.trim()))}
             placeholder="e.g., synergy, guru, hack, ninja"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           />
         </div>
       </div>
