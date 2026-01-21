@@ -7,6 +7,21 @@
   --primary-dark: #0088C2;
   --muted: #808191;
   --border: #E4E4E4;
+  
+  /* New Ghostwriter-inspired colors */
+  --sidebar-bg: #1a1a2e;
+  --sidebar-hover: #252542;
+  --sidebar-active: #2d2d4a;
+  --accent-purple: #7C3AED;
+  --accent-purple-dark: #6D28D9;
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --error: #EF4444;
+  --error-light: #FEE2E2;
+  --info: #3B82F6;
+  --info-light: #DBEAFE;
 }
 
 body {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Template } from '@/lib/elevate-types';
+import { LoadingState, PageHeader } from '@/components/ui';
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -33,19 +34,14 @@ export default function TemplatesPage() {
     : templates.filter(t => t.category === filter);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-8">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link href="/" className="text-[#808191] hover:text-[#11142D]">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-[#11142D]">App Templates</h1>
-          <p className="text-[#808191]">Start building with a proven template</p>
-        </div>
-      </div>
+      <PageHeader
+        title="App Templates"
+        subtitle="Start building with a proven template"
+        backHref="/"
+        backLabel="Back to Dashboard"
+      />
 
       {/* Category Filter */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -55,8 +51,8 @@ export default function TemplatesPage() {
             onClick={() => setFilter(cat)}
             className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
               filter === cat
-                ? 'bg-[#009FE2] text-white'
-                : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#009FE2]'
+                ? 'bg-[#7C3AED] text-white'
+                : 'bg-white text-[#808191] border border-[#E4E4E4] hover:border-[#7C3AED]'
             }`}
           >
             {cat === 'all' ? 'All Templates' : cat}
@@ -66,23 +62,26 @@ export default function TemplatesPage() {
 
       {/* Templates Grid */}
       {loading ? (
-        <div className="text-center py-12 text-[#808191]">Loading templates...</div>
+        <LoadingState 
+          title="Loading templates..."
+          subtitle="Fetching available app templates"
+        />
       ) : (
         <div className="grid grid-cols-3 gap-6">
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="bg-white rounded-xl border border-[#E4E4E4] overflow-hidden hover:border-[#009FE2] hover:shadow-lg transition-all group"
+              className="bg-white rounded-xl border border-[#E4E4E4] overflow-hidden hover:border-[#7C3AED] hover:shadow-lg transition-all group"
             >
               {/* Template Preview */}
-              <div className="h-40 bg-gradient-to-br from-[#F7F8FA] to-[#E4E4E4] flex items-center justify-center">
+              <div className="h-40 bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center">
                 <span className="text-6xl">{template.icon}</span>
               </div>
               
               {/* Template Info */}
               <div className="p-5">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-[#11142D] group-hover:text-[#009FE2] transition-colors">
+                  <h3 className="font-semibold text-[#11142D] group-hover:text-[#7C3AED] transition-colors">
                     {template.name}
                   </h3>
                   <span className={`px-2 py-0.5 rounded text-xs font-medium ${
@@ -116,7 +115,7 @@ export default function TemplatesPage() {
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex gap-1">
                     {(template.tech_stack || []).slice(0, 3).map((tech, i) => (
-                      <span key={i} className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">
+                      <span key={i} className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs">
                         {tech}
                       </span>
                     ))}
@@ -127,7 +126,7 @@ export default function TemplatesPage() {
                 {/* CTA */}
                 <Link
                   href={`/?template=${template.id}`}
-                  className="mt-4 block w-full text-center px-4 py-2 bg-[#009FE2] text-white rounded-xl font-medium hover:bg-[#0088C2] transition-colors"
+                  className="mt-4 block w-full text-center px-4 py-2 bg-[#7C3AED] text-white rounded-xl font-medium hover:bg-[#6D28D9] transition-colors"
                 >
                   Use This Template
                 </Link>
