@@ -4,17 +4,17 @@ import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { Project, CustomerDNA, AppDNA, BrandDNA, LAUNCH_DAY_THEMES } from '@/lib/elevate-types';
 
-type Tab = 'overview' | 'research' | 'customer' | 'app' | 'brand' | 'build' | 'launch' | 'marketing';
+type Tab = 'overview' | 'app' | 'brand' | 'customer' | 'research' | 'build' | 'launch' | 'market';
 
 const TABS: { id: Tab; name: string }[] = [
   { id: 'overview', name: 'Overview' },
+  { id: 'app', name: 'App DNA' },
+  { id: 'brand', name: 'Brand DNA' },
+  { id: 'customer', name: 'Customer DNA' },
   { id: 'research', name: 'Research' },
-  { id: 'customer', name: 'Customer' },
-  { id: 'app', name: 'App' },
-  { id: 'brand', name: 'Brand' },
   { id: 'build', name: 'Build' },
   { id: 'launch', name: 'Launch' },
-  { id: 'marketing', name: 'Marketing' },
+  { id: 'market', name: 'Market' },
 ];
 
 
@@ -231,7 +231,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         {activeTab === 'launch' && (
           <LaunchTab project={project} onRunAgent={runAgent} />
         )}
-        {activeTab === 'marketing' && (
+        {activeTab === 'market' && (
           <CopyTab project={project} onRunAgent={runAgent} agentRunning={agentRunning} />
         )}
       </div>
