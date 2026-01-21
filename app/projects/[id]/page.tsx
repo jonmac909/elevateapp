@@ -146,7 +146,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       });
       if (res.ok) {
         const data = await res.json();
-        setAgentResult({ type: agentType, output: data.output });
+        // Only show results modal for non-fill agents
+        if (!agentType.startsWith('fill_')) {
+          setAgentResult({ type: agentType, output: data.output });
+        }
         fetchProject();
       } else {
         const error = await res.json();
