@@ -119,22 +119,22 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-[#1a1a2e] text-white transition-all duration-300 z-50 flex flex-col ${
+      className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50 flex flex-col ${
         collapsed ? 'w-16' : 'w-64'
       }`}
     >
       {/* Logo */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-gray-100">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
           {!collapsed && (
             <div className="overflow-hidden">
-              <span className="font-bold text-lg text-white block">ElevateOS</span>
-              <span className="text-xs text-gray-400">App Builder Platform</span>
+              <span className="font-bold text-lg text-gray-900 block">ElevateOS</span>
+              <span className="text-xs text-gray-400">Command Center</span>
             </div>
           )}
         </Link>
@@ -145,7 +145,7 @@ export default function Sidebar() {
         {navigation.map((section, sectionIndex) => (
           <div key={sectionIndex} className="mb-6">
             {section.title && !collapsed && (
-              <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <h3 className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 {section.title}
               </h3>
             )}
@@ -157,10 +157,10 @@ export default function Sidebar() {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all relative ${
                         isActive
-                          ? 'bg-white/10 text-white'
-                          : 'text-gray-400 hover:bg-[#252542] hover:text-white'
+                          ? 'text-teal-500 bg-teal-50 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-6 before:bg-teal-500 before:rounded-r'
+                          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                       }`}
                       title={collapsed ? item.name : undefined}
                     >
@@ -169,7 +169,7 @@ export default function Sidebar() {
                         <>
                           <span className="flex-1 font-medium">{item.name}</span>
                           {item.badge && (
-                            <span className="px-2 py-0.5 text-[10px] font-semibold bg-white/20 text-white/80 rounded-full">
+                            <span className="px-2 py-0.5 text-[10px] font-semibold bg-orange-100 text-orange-600 rounded-full">
                               {item.badge}
                             </span>
                           )}
@@ -185,10 +185,10 @@ export default function Sidebar() {
       </nav>
 
       {/* Collapse Toggle */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-gray-100">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#252542] hover:text-white transition-all"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all"
         >
           <svg
             className={`w-5 h-5 transition-transform ${collapsed ? 'rotate-180' : ''}`}
@@ -199,6 +199,16 @@ export default function Sidebar() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
           </svg>
           {!collapsed && <span className="text-sm">Collapse</span>}
+        </button>
+      </div>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-gray-100">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          {!collapsed && <span className="text-sm">Logout</span>}
         </button>
       </div>
     </aside>

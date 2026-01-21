@@ -89,7 +89,7 @@ export default function ElevatePage() {
         actions={
           <button
             onClick={() => setShowNewProject(true)}
-            className="px-4 py-2 bg-[#1a1a2e] text-white rounded-lg font-medium hover:bg-[#2d2d4a] transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -134,7 +134,7 @@ export default function ElevatePage() {
             <p className="text-[#808191] mb-4">Start by creating your first app project</p>
             <button
               onClick={() => setShowNewProject(true)}
-              className="px-4 py-2 bg-[#1a1a2e] text-white rounded-lg font-medium hover:bg-[#2d2d4a] transition-colors"
+              className="px-4 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors"
             >
               Create Your First Project
             </button>
@@ -150,7 +150,7 @@ export default function ElevatePage() {
                   className="bg-white rounded-xl border border-[#E4E4E4] p-5 hover:border-[#11142D] hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 bg-[#1a1a2e] rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
@@ -176,7 +176,7 @@ export default function ElevatePage() {
                     </div>
                     <div className="h-1.5 bg-[#E4E4E4] rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-[#1a1a2e] rounded-full transition-all"
+                        className="h-full bg-teal-500 rounded-full transition-all"
                         style={{ width: `${project.progress}%` }}
                       />
                     </div>
@@ -287,7 +287,7 @@ export default function ElevatePage() {
               <button
                 onClick={createProject}
                 disabled={!newProjectName.trim()}
-                className="flex-1 px-4 py-3 bg-[#1a1a2e] text-white rounded-xl font-medium hover:bg-[#2d2d4a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-3 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create Project
               </button>

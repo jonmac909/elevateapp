@@ -1,27 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F7F8FA;
+  --background: #F5F7FA;
   --foreground: #11142D;
-  --primary: #009FE2;
-  --primary-dark: #0088C2;
-  --muted: #808191;
-  --border: #E4E4E4;
+  --primary: #14B8A6;
+  --primary-dark: #0D9488;
+  --primary-light: #CCFBF1;
+  --muted: #6B7280;
+  --border: #E5E7EB;
   
-  /* New Ghostwriter-inspired colors */
-  --sidebar-bg: #1a1a2e;
-  --sidebar-hover: #252542;
-  --sidebar-active: #2d2d4a;
-  --accent-purple: #7C3AED;
-  --accent-purple-dark: #6D28D9;
-  --success: #10B981;
-  --success-light: #D1FAE5;
-  --warning: #F59E0B;
-  --warning-light: #FEF3C7;
+  /* Light sidebar theme */
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #E5E7EB;
+  --sidebar-text: #6B7280;
+  --sidebar-text-active: #14B8A6;
+  --sidebar-hover: #F9FAFB;
+  
+  /* Status colors */
+  --success: #22C55E;
+  --success-light: #DCFCE7;
+  --warning: #EAB308;
+  --warning-light: #FEF9C3;
   --error: #EF4444;
   --error-light: #FEE2E2;
-  --info: #3B82F6;
-  --info-light: #DBEAFE;
 }
 
 body {
