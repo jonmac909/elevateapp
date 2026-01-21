@@ -740,7 +740,9 @@ function BrandDNATab({ dna, onUpdate, onRunAgent }: { dna?: BrandDNA; onUpdate: 
 // Research Tab
 function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (type: string) => void }) {
   const getResearchContent = (agentType: string) => {
-    const asset = project.copy_assets?.find(a => a.name === `Generated ${agentType}`);
+    // Get the most recent asset with this name (sorted by created_at descending)
+    const assets = project.copy_assets?.filter(a => a.name === `Generated ${agentType}`) || [];
+    const asset = assets.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
     if (!asset) return null;
     try {
       const parsed = JSON.parse(asset.content);
