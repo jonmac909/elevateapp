@@ -78,6 +78,7 @@ export interface Project {
   customer_dna?: CustomerDNA;
   app_dna?: AppDNA;
   brand_dna?: BrandDNA;
+  copy_assets?: CopyAsset[];
 }
 
 export interface LandingPage {

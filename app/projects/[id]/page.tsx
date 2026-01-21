@@ -146,8 +146,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       });
       if (res.ok) {
         const data = await res.json();
-        // Only show results modal for non-fill agents
-        if (!agentType.startsWith('fill_')) {
+        // Only show results modal for non-fill and non-research agents
+        const researchAgents = ['app_idea_validator', 'niche_analyzer', 'competitor_xray'];
+        if (!agentType.startsWith('fill_') && !researchAgents.includes(agentType)) {
           setAgentResult({ type: agentType, output: data.output });
         }
         fetchProject();
@@ -268,12 +269,29 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 </svg>
               </button>
             </div>
-            <div className="p-4 overflow-auto flex-1">
-              <pre className="text-sm text-[#11142D] whitespace-pre-wrap font-mono bg-[#F7F8FA] p-4 rounded-lg">
-                {typeof agentResult.output === 'string' 
-                  ? agentResult.output 
-                  : JSON.stringify(agentResult.output, null, 2)}
-              </pre>
+            <div className="p-4 overflow-auto flex-1 prose prose-sm max-w-none">
+              <div 
+                className="text-sm text-[#11142D]"
+                dangerouslySetInnerHTML={{ 
+                  __html: (() => {
+                    const output = agentResult.output as Record<string, unknown>;
+                    const text = typeof output === 'string' ? output : (output?.text as string) || JSON.stringify(output, null, 2);
+                    // Basic markdown to HTML conversion
+                    return text
+                      .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
+                      .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3">$1</h2>')
+                      .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-6 mb-4">$1</h1>')
+                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                      .replace(/^- (.*$)/gim, '<li class="ml-4">$1</li>')
+                      .replace(/^(\d+)\. (.*$)/gim, '<li class="ml-4">$2</li>')
+                      .replace(/\n\n/g, '</p><p class="mb-3">')
+                      .replace(/\n/g, '<br/>')
+                      .replace(/---/g, '<hr class="my-4 border-gray-200"/>')
+                      .replace(/\|(.*)\|/g, (match) => `<div class="font-mono text-xs bg-gray-100 px-2 py-1 rounded">${match}</div>`);
+                  })()
+                }}
+              />
             </div>
             <div className="p-4 border-t border-[#E4E4E4]">
               <button
@@ -721,47 +739,60 @@ function BrandDNATab({ dna, onUpdate, onRunAgent }: { dna?: BrandDNA; onUpdate: 
 
 // Research Tab
 function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (type: string) => void }) {
+  const getResearchContent = (agentType: string) => {
+    const asset = project.copy_assets?.find(a => a.name === `Generated ${agentType}`);
+    if (!asset) return null;
+    try {
+      const parsed = JSON.parse(asset.content);
+      return parsed.text || asset.content;
+    } catch {
+      return asset.content;
+    }
+  };
+
+  const agents = [
+    { type: 'app_idea_validator', icon: '🔍', name: 'App Idea Validator', desc: 'Analyze market size, competition, and demand score', btn: 'Run Validator' },
+    { type: 'niche_analyzer', icon: '📊', name: 'Niche Analyzer', desc: 'Discover top pain points, solutions, and gaps', btn: 'Analyze Niche' },
+    { type: 'competitor_xray', icon: '🎯', name: 'Competitor X-Ray', desc: 'Analyze competitor features, pricing, and weaknesses', btn: 'X-Ray Competitor' },
+  ];
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-[#11142D]">Research Agents</h3>
       <p className="text-[#808191]">Use these AI agents to validate your app idea before building.</p>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
-          <div className="text-2xl mb-2">🔍</div>
-          <h4 className="font-semibold text-[#11142D] mb-1">App Idea Validator</h4>
-          <p className="text-sm text-[#808191] mb-3">Analyze market size, competition, and demand score</p>
-          <button
-            onClick={() => onRunAgent('app_idea_validator')}
-            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
-          >
-            Run Validator
-          </button>
-        </div>
-
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
-          <div className="text-2xl mb-2">📊</div>
-          <h4 className="font-semibold text-[#11142D] mb-1">Niche Analyzer</h4>
-          <p className="text-sm text-[#808191] mb-3">Discover top pain points, solutions, and gaps</p>
-          <button
-            onClick={() => onRunAgent('niche_analyzer')}
-            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
-          >
-            Analyze Niche
-          </button>
-        </div>
-
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#47A8DF] transition-colors">
-          <div className="text-2xl mb-2">🎯</div>
-          <h4 className="font-semibold text-[#11142D] mb-1">Competitor X-Ray</h4>
-          <p className="text-sm text-[#808191] mb-3">Analyze competitor features, pricing, and weaknesses</p>
-          <button
-            onClick={() => onRunAgent('competitor_xray')}
-            className="w-full px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
-          >
-            X-Ray Competitor
-          </button>
-        </div>
+      <div className="space-y-6">
+        {agents.map((agent) => {
+          const content = getResearchContent(agent.type);
+          return (
+            <div key={agent.type} className="border border-[#E4E4E4] rounded-xl overflow-hidden">
+              <div className="p-4 bg-[#F7F8FA] flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{agent.icon}</span>
+                  <div>
+                    <h4 className="font-semibold text-[#11142D]">{agent.name}</h4>
+                    <p className="text-sm text-[#808191]">{agent.desc}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => onRunAgent(agent.type)}
+                  className="px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9]"
+                >
+                  {content ? 'Re-run' : agent.btn}
+                </button>
+              </div>
+              {content && (
+                <div className="p-4 border-t border-[#E4E4E4]">
+                  <textarea
+                    defaultValue={content}
+                    className="w-full h-64 px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none text-sm font-mono"
+                    placeholder="Research results will appear here..."
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

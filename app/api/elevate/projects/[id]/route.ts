@@ -14,7 +14,8 @@ export async function GET(
         *,
         customer_dna:elevate_customer_dnas(*),
         app_dna:elevate_app_dnas(*),
-        brand_dna:elevate_brand_dnas(*)
+        brand_dna:elevate_brand_dnas(*),
+        copy_assets:elevate_copy_assets(*)
       `)
       .eq('id', id)
       .single();
@@ -51,7 +52,8 @@ export async function PATCH(
         *,
         customer_dna:elevate_customer_dnas(*),
         app_dna:elevate_app_dnas(*),
-        brand_dna:elevate_brand_dnas(*)
+        brand_dna:elevate_brand_dnas(*),
+        copy_assets:elevate_copy_assets(*)
       `)
       .single();
 
