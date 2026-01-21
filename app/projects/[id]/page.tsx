@@ -125,6 +125,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
   const runAgent = async (agentType: string) => {
     if (!project) return;
+    
+    // Get API key from localStorage
+    const apiKey = localStorage.getItem('claudeApiKey');
+    if (!apiKey) {
+      alert('Please add your Claude API key in Settings first.');
+      return;
+    }
+    
     setAgentRunning(agentType);
     try {
       const res = await fetch('/api/elevate/agents/run', {
@@ -133,6 +141,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         body: JSON.stringify({
           project_id: project.id,
           agent_type: agentType,
+          api_key: apiKey,
         }),
       });
       if (res.ok) {

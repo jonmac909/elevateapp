@@ -56,14 +56,22 @@ export default function AgentsPage() {
       return;
     }
 
+    // Get API key from localStorage
+    const apiKey = localStorage.getItem('claudeApiKey');
+    if (!apiKey) {
+      addToast('Please add your Claude API key in Settings first.', 'error');
+      return;
+    }
+
     setRunningAgent(agentType);
     try {
       const res = await fetch('/api/elevate/agents/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          projectId: selectedProject,
-          agentType,
+          project_id: selectedProject,
+          agent_type: agentType,
+          api_key: apiKey,
         }),
       });
 

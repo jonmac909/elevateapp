@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import Anthropic from '@anthropic-ai/sdk';
 
-const anthropic = new Anthropic();
-
 // Agent prompts for different tasks
 const AGENT_PROMPTS: Record<string, (context: Record<string, unknown>) => string> = {
   app_idea_validator: (ctx) => `You are an app idea validator. Analyze this app idea and provide:
@@ -297,11 +295,19 @@ Output as JSON with before and after objects, each containing emotional_state, c
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { project_id, agent_type } = body;
+    const { project_id, agent_type, api_key } = body;
 
     if (!project_id || !agent_type) {
       return NextResponse.json({ error: 'Missing project_id or agent_type' }, { status: 400 });
     }
+
+    // Get API key from request or environment
+    const anthropicApiKey = api_key || process.env.ANTHROPIC_API_KEY;
+    if (!anthropicApiKey) {
+      return NextResponse.json({ error: 'Claude API key not configured. Add it in Settings.' }, { status: 400 });
+    }
+
+    const anthropic = new Anthropic({ apiKey: anthropicApiKey });
 
     // Fetch project with all DNAs
     const { data: project, error: projectError } = await supabase
