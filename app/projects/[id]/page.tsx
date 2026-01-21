@@ -2,6 +2,8 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Project, CustomerDNA, AppDNA, BrandDNA, LAUNCH_DAY_THEMES } from '@/lib/elevate-types';
 
 type Tab = 'overview' | 'app' | 'brand' | 'customer' | 'research' | 'build' | 'launch' | 'market';
@@ -813,39 +815,28 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
                 </button>
               </div>
               {content && (
-                <div className="p-4 border-t border-[#E4E4E4]">
-                  <div 
-                    className="prose prose-sm max-w-none text-[#11142D] 
-                      prose-headings:text-[#11142D] prose-headings:font-bold
-                      prose-h1:text-xl prose-h1:mt-4 prose-h1:mb-3
-                      prose-h2:text-lg prose-h2:mt-4 prose-h2:mb-2
-                      prose-h3:text-base prose-h3:mt-3 prose-h3:mb-2
-                      prose-p:my-2 prose-li:my-1
-                      prose-table:text-sm prose-th:bg-[#F7F8FA] prose-th:p-2 prose-td:p-2 prose-td:border-[#E4E4E4]
-                      prose-hr:my-4 prose-hr:border-[#E4E4E4]
-                      prose-strong:text-[#11142D]"
-                    dangerouslySetInnerHTML={{
-                      __html: (() => {
-                        let html = content
-                          .replace(/^### (.*$)/gim, '<h3 class="text-base font-bold mt-4 mb-2">$1</h3>')
-                          .replace(/^## (.*$)/gim, '<h2 class="text-lg font-bold mt-5 mb-3 text-[#11142D]">$1</h2>')
-                          .replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold mt-6 mb-4 text-[#11142D]">$1</h1>')
-                          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                          .replace(/^> (.*$)/gim, '<blockquote class="border-l-4 border-[#47A8DF] pl-4 my-3 italic text-[#808191]">$1</blockquote>')
-                          .replace(/^- (.*$)/gim, '<li class="ml-4 my-1">• $1</li>')
-                          .replace(/^(\d+)\. (.*$)/gim, '<li class="ml-4 my-1">$1. $2</li>')
-                          .replace(/✅/g, '<span class="text-green-500">✅</span>')
-                          .replace(/⚠️/g, '<span class="text-yellow-500">⚠️</span>')
-                          .replace(/🔴/g, '<span class="text-red-500">🔴</span>')
-                          .replace(/🟡/g, '<span class="text-yellow-500">🟡</span>')
-                          .replace(/🟢/g, '<span class="text-green-500">🟢</span>')
-                          .replace(/\n\n/g, '<br/><br/>')
-                          .replace(/\n/g, '<br/>')
-                          .replace(/---/g, '<hr class="my-4 border-[#E4E4E4]"/>');
-                        return html;
-                      })()
+                <div className="p-4 border-t border-[#E4E4E4] max-h-[600px] overflow-y-auto">
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      h1: ({children}) => <h1 className="text-xl font-bold mt-6 mb-4 text-[#11142D]">{children}</h1>,
+                      h2: ({children}) => <h2 className="text-lg font-bold mt-5 mb-3 text-[#11142D]">{children}</h2>,
+                      h3: ({children}) => <h3 className="text-base font-bold mt-4 mb-2 text-[#11142D]">{children}</h3>,
+                      p: ({children}) => <p className="my-2 text-[#11142D]">{children}</p>,
+                      ul: ({children}) => <ul className="list-disc ml-6 my-2">{children}</ul>,
+                      ol: ({children}) => <ol className="list-decimal ml-6 my-2">{children}</ol>,
+                      li: ({children}) => <li className="my-1">{children}</li>,
+                      strong: ({children}) => <strong className="font-bold">{children}</strong>,
+                      blockquote: ({children}) => <blockquote className="border-l-4 border-[#47A8DF] pl-4 my-3 italic text-[#808191]">{children}</blockquote>,
+                      hr: () => <hr className="my-4 border-[#E4E4E4]" />,
+                      table: ({children}) => <table className="w-full border-collapse my-4 text-sm">{children}</table>,
+                      thead: ({children}) => <thead className="bg-[#F7F8FA]">{children}</thead>,
+                      th: ({children}) => <th className="border border-[#E4E4E4] px-3 py-2 text-left font-semibold">{children}</th>,
+                      td: ({children}) => <td className="border border-[#E4E4E4] px-3 py-2">{children}</td>,
                     }}
-                  />
+                  >
+                    {content}
+                  </ReactMarkdown>
                 </div>
               )}
             </div>
