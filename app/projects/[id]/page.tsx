@@ -226,7 +226,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <ResearchTab project={project} onRunAgent={runAgent} />
         )}
         {activeTab === 'build' && (
-          <BuildTab project={project} />
+          <BuildTab project={project} onUpdate={updateAppDNA} />
         )}
         {activeTab === 'launch' && (
           <LaunchTab project={project} onRunAgent={runAgent} />
@@ -601,16 +601,6 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-[#11142D] mb-2">Deploy URL</label>
-        <input
-          type="url"
-          value={formData.deploy_url || ''}
-          onChange={(e) => handleChange('deploy_url', e.target.value)}
-          placeholder="https://your-app.vercel.app"
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
-        />
-      </div>
     </div>
   );
 }
@@ -745,7 +735,16 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
 }
 
 // Build Tab
-function BuildTab({ project }: { project: Project }) {
+function BuildTab({ project, onUpdate }: { project: Project; onUpdate: (updates: Partial<AppDNA>) => Promise<void> }) {
+  const [deployUrl, setDeployUrl] = useState(project.app_dna?.deploy_url || '');
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    await onUpdate({ deploy_url: deployUrl });
+    setSaving(false);
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-[#11142D]">Build Your App</h3>
@@ -776,19 +775,38 @@ function BuildTab({ project }: { project: Project }) {
         </div>
       </div>
 
-      {project.app_dna?.deploy_url && (
-        <div className="p-4 bg-green-50 rounded-xl border border-green-200">
-          <p className="text-sm text-green-700 mb-2">Your app is deployed at:</p>
-          <a 
-            href={project.app_dna.deploy_url} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-green-800 font-medium hover:underline"
+      <div className="p-6 bg-white rounded-xl border border-[#E4E4E4]">
+        <label className="block text-sm font-medium text-[#11142D] mb-2">Deploy URL</label>
+        <p className="text-sm text-[#808191] mb-3">Once deployed, paste your app URL here:</p>
+        <div className="flex gap-3">
+          <input
+            type="url"
+            value={deployUrl}
+            onChange={(e) => setDeployUrl(e.target.value)}
+            placeholder="https://your-app.vercel.app"
+            className="flex-1 px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+          />
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-4 py-3 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9] disabled:opacity-50"
           >
-            {project.app_dna.deploy_url}
-          </a>
+            {saving ? 'Saving...' : 'Save'}
+          </button>
         </div>
-      )}
+        {project.app_dna?.deploy_url && (
+          <p className="mt-3 text-sm">
+            <a 
+              href={project.app_dna.deploy_url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[#47A8DF] hover:underline"
+            >
+              Visit your deployed app →
+            </a>
+          </p>
+        )}
+      </div>
     </div>
   );
 }
