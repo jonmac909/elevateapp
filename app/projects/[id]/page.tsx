@@ -26,6 +26,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [agentRunning, setAgentRunning] = useState<string | null>(null);
+  const [agentProgress, setAgentProgress] = useState<{ step: string; percent: number } | null>(null);
   const [agentResult, setAgentResult] = useState<{ type: string; output: unknown } | null>(null);
 
   useEffect(() => {
@@ -134,6 +135,21 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }
     
     setAgentRunning(agentType);
+    setAgentProgress({ step: 'Initializing...', percent: 5 });
+    
+    // Simulate progress updates
+    const progressSteps = [
+      { step: 'Analyzing project data...', percent: 15, delay: 1000 },
+      { step: 'Generating insights...', percent: 35, delay: 3000 },
+      { step: 'Processing with AI...', percent: 55, delay: 5000 },
+      { step: 'Refining results...', percent: 75, delay: 8000 },
+      { step: 'Finalizing...', percent: 90, delay: 12000 },
+    ];
+    
+    const progressTimers = progressSteps.map(({ step, percent, delay }) => 
+      setTimeout(() => setAgentProgress({ step, percent }), delay)
+    );
+    
     try {
       const res = await fetch('/api/elevate/agents/run', {
         method: 'POST',
@@ -160,6 +176,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       console.error('Error running agent:', error);
       alert('Agent execution failed. Check console for details.');
     } finally {
+      progressTimers.forEach(clearTimeout);
+      setAgentProgress(null);
       setAgentRunning(null);
     }
   };
@@ -243,10 +261,21 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       {/* Agent Running Overlay */}
       {agentRunning && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 text-center max-w-md">
+          <div className="bg-white rounded-xl p-8 text-center max-w-md w-full mx-4">
             <div className="size-12 border-4 border-[#47A8DF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <h3 className="text-lg font-semibold text-[#11142D] mb-2">Running {agentRunning.replace(/_/g, ' ')}</h3>
-            <p className="text-sm text-[#808191]">This may take a moment...</p>
+            {agentProgress && (
+              <>
+                <p className="text-sm text-[#808191] mb-3">{agentProgress.step}</p>
+                <div className="w-full bg-[#E4E4E4] rounded-full h-2 mb-2">
+                  <div 
+                    className="bg-[#47A8DF] h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${agentProgress.percent}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-[#808191]">{agentProgress.percent}% complete</p>
+              </>
+            )}
           </div>
         </div>
       )}

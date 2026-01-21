@@ -563,13 +563,25 @@ export async function POST(request: NextRequest) {
       };
       
       const copyType = typeMapping[agent_type] || 'research';
-      await supabase.from('elevate_copy_assets').insert({
+      const contentToSave = typeof outputData === 'string' ? outputData : JSON.stringify(outputData, null, 2);
+      console.log(`Saving copy_asset for ${agent_type}, project_id: ${project_id}, content length: ${contentToSave.length}`);
+      const { data: savedAsset, error: copyError } = await supabase.from('elevate_copy_assets').insert({
         project_id,
         type: copyType,
         name: `Generated ${agent_type}`,
-        content: typeof outputData === 'string' ? outputData : JSON.stringify(outputData, null, 2),
+        content: contentToSave,
         metadata: { agent_run_id: agentRun?.id },
-      });
+      }).select().single();
+      if (copyError) {
+        console.error('Error saving copy asset:', copyError);
+        return NextResponse.json({ 
+          success: true, 
+          output: outputData,
+          agent_run_id: agentRun?.id,
+          save_error: copyError.message,
+        });
+      }
+      console.log('Saved copy_asset:', savedAsset?.id);
     }
 
     return NextResponse.json({ 

@@ -14,8 +14,7 @@ export async function GET(
         *,
         customer_dna:elevate_customer_dnas(*),
         app_dna:elevate_app_dnas(*),
-        brand_dna:elevate_brand_dnas(*),
-        copy_assets:elevate_copy_assets(*)
+        brand_dna:elevate_brand_dnas(*)
       `)
       .eq('id', id)
       .single();
@@ -25,7 +24,14 @@ export async function GET(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ project });
+    // Fetch copy_assets separately
+    const { data: copy_assets } = await supabase
+      .from('elevate_copy_assets')
+      .select('*')
+      .eq('project_id', id)
+      .order('created_at', { ascending: false });
+
+    return NextResponse.json({ project: { ...project, copy_assets: copy_assets || [] } });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
