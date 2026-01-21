@@ -290,13 +290,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 // Overview Tab
 function OverviewTab({ project }: { project: Project }) {
   const completionItems = [
-    { name: 'Customer DNA', done: !!project.customer_dna?.main_problem },
-    { name: 'App DNA', done: !!project.app_dna?.problem_solved },
-    { name: 'Brand DNA', done: !!project.brand_dna?.your_story },
-    { name: 'Research Completed', done: project.progress >= 25 },
-    { name: 'App Built', done: project.progress >= 50 },
-    { name: 'Landing Page', done: project.progress >= 75 },
-    { name: 'Launch Sequence', done: project.progress >= 100 },
+    { name: 'App', done: !!project.app_dna?.problem_solved },
+    { name: 'Brand', done: !!project.brand_dna?.your_story },
+    { name: 'Customer', done: !!project.customer_dna?.main_problem },
+    { name: 'Research', done: project.progress >= 25 },
+    { name: 'Build', done: !!project.app_dna?.deploy_url },
+    { name: 'Launch', done: project.progress >= 75 },
+    { name: 'Market', done: project.progress >= 100 },
   ];
 
   return (

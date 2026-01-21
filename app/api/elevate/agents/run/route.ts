@@ -411,7 +411,7 @@ export async function POST(request: NextRequest) {
     const prompt = promptGenerator(context);
     
     const message = await anthropic.messages.create({
-      model: 'claude-opus-4-20250514',
+      model: 'claude-opus-4-5-20250514',
       max_tokens: 4096,
       messages: [
         {
