@@ -198,6 +198,100 @@ Generate responses to these 10 common objections:
 10. "What if I fail?"
 
 For each: The objection + empathetic response + reframe.`,
+
+  ad_copy_generator: (ctx) => `You are an expert ad copywriter. Generate high-converting ad copy for Facebook and Instagram:
+
+App: ${ctx.app_name || 'Not specified'}
+Problem: ${ctx.problem || 'Not specified'}
+Target: ${ctx.target_market || 'Not specified'}
+Before State: ${ctx.before_emotional_state || 'Not specified'}
+After State: ${ctx.after_emotional_state || 'Not specified'}
+Unique Mechanism: ${ctx.unique_mechanism || 'Not specified'}
+
+Generate:
+
+FACEBOOK ADS (3 variations):
+For each:
+- Primary text (125 chars for mobile)
+- Headline (25 chars)
+- Description (30 chars)
+- Long-form primary text (500 chars)
+
+INSTAGRAM ADS (3 variations):
+For each:
+- Caption (2200 chars max, optimized for engagement)
+- First line hook (must stop scroll)
+- CTA text
+- Hashtags (10-15 relevant ones)
+
+STORY ADS (3 variations):
+For each:
+- Hook text (short, punchy)
+- Body text
+- CTA button text
+
+Output as JSON with facebook_ads, instagram_ads, and story_ads arrays.`,
+
+  case_study_generator: (ctx) => `You are a case study writer. Generate compelling case studies/success stories:
+
+App: ${ctx.app_name || 'Not specified'}
+Problem: ${ctx.problem || 'Not specified'}
+Target: ${ctx.target_market || 'Not specified'}
+Before State: ${ctx.before_emotional_state || 'Not specified'}
+After State: ${ctx.after_emotional_state || 'Not specified'}
+
+Generate 3 fictional but realistic case studies using this structure for each:
+
+1. HEADLINE - Attention-grabbing result
+2. THE SITUATION (Before)
+   - Who they are (demographics)
+   - What they were struggling with
+   - What they had tried before
+   - How they felt (use visceral language)
+3. THE TURNING POINT
+   - How they found the solution
+   - Initial skepticism
+   - What made them try it
+4. THE TRANSFORMATION (After)
+   - Specific results (use numbers where possible)
+   - How their daily life changed
+   - How they feel now
+   - Quote from them (realistic voice)
+5. THE TAKEAWAY
+   - Key lesson
+   - Why this approach worked
+
+Output as JSON array with 3 case study objects.`,
+
+  transformation_mapper: (ctx) => `You are a transformation mapping expert. Based on the problem and target market, generate a detailed visceral transformation map:
+
+Problem: ${ctx.problem || 'Not specified'}
+Target: ${ctx.target_market || 'Not specified'}
+
+Create a complete transformation map with BEFORE and AFTER states across 4 dimensions:
+
+1. EMOTIONAL STATE
+   - Before: How they feel daily (use visceral, sensory language)
+   - After: How they'll feel after transformation
+
+2. CORE FEAR
+   - Before: Their deepest fear about this problem
+   - After: The new belief that replaces the fear
+
+3. DAILY EXPERIENCE  
+   - Before: What their typical day looks like dealing with this
+   - After: What their new normal looks like
+
+4. SELF-IDENTITY
+   - Before: How they see themselves (often negative)
+   - After: Their new identity/self-image
+
+For each dimension, provide:
+- Vivid, emotional language
+- Specific details (not generic)
+- Language they would actually use
+
+Output as JSON with before and after objects, each containing emotional_state, core_fear, daily_experience, and self_identity fields.`,
 };
 
 export async function POST(request: NextRequest) {
@@ -330,6 +424,26 @@ export async function POST(request: NextRequest) {
         guarantee: outputData.guarantee || null,
         charter_content: outputData.charter || JSON.stringify(outputData),
       });
+    } else if (agent_type === 'transformation_mapper') {
+      // Update customer DNA with transformation map data
+      if (project.customer_dna?.id) {
+        const transformData = outputData as { before?: Record<string, string>; after?: Record<string, string> };
+        const beforeData = transformData.before || {};
+        const afterData = transformData.after || {};
+        await supabase
+          .from('elevate_customer_dnas')
+          .update({
+            before_emotional_state: beforeData.emotional_state,
+            before_core_fear: beforeData.core_fear,
+            before_daily_experience: beforeData.daily_experience,
+            before_self_identity: beforeData.self_identity,
+            after_emotional_state: afterData.emotional_state,
+            after_core_fear: afterData.core_fear,
+            after_daily_experience: afterData.daily_experience,
+            after_self_identity: afterData.self_identity,
+          })
+          .eq('id', project.customer_dna.id);
+      }
     } else {
       // Store as copy asset
       const typeMapping: Record<string, string> = {
@@ -337,18 +451,21 @@ export async function POST(request: NextRequest) {
         email_generator: 'email_welcome',
         headline_generator: 'headlines',
         objection_handler: 'objections',
+        ad_copy_generator: 'ad_facebook',
+        case_study_generator: 'case_study',
+        app_idea_validator: 'research',
+        niche_analyzer: 'research',
+        competitor_xray: 'research',
       };
       
-      const copyType = typeMapping[agent_type];
-      if (copyType) {
-        await supabase.from('elevate_copy_assets').insert({
-          project_id,
-          type: copyType,
-          name: `Generated ${agent_type}`,
-          content: typeof outputData === 'string' ? outputData : JSON.stringify(outputData, null, 2),
-          metadata: { agent_run_id: agentRun?.id },
-        });
-      }
+      const copyType = typeMapping[agent_type] || 'research';
+      await supabase.from('elevate_copy_assets').insert({
+        project_id,
+        type: copyType,
+        name: `Generated ${agent_type}`,
+        content: typeof outputData === 'string' ? outputData : JSON.stringify(outputData, null, 2),
+        metadata: { agent_run_id: agentRun?.id },
+      });
     }
 
     return NextResponse.json({ 

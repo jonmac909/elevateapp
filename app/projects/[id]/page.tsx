@@ -31,6 +31,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [agentRunning, setAgentRunning] = useState<string | null>(null);
+  const [agentResult, setAgentResult] = useState<{ type: string; output: unknown } | null>(null);
 
   useEffect(() => {
     fetchProject();
@@ -129,6 +131,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
   const runAgent = async (agentType: string) => {
     if (!project) return;
+    setAgentRunning(agentType);
     try {
       const res = await fetch('/api/elevate/agents/run', {
         method: 'POST',
@@ -140,11 +143,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       });
       if (res.ok) {
         const data = await res.json();
-        alert(`Agent completed! Check the ${agentType} results.`);
+        setAgentResult({ type: agentType, output: data.output });
         fetchProject();
+      } else {
+        const error = await res.json();
+        alert(`Agent failed: ${error.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error running agent:', error);
+      alert('Agent execution failed. Check console for details.');
+    } finally {
+      setAgentRunning(null);
     }
   };
 
@@ -212,7 +221,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <OverviewTab project={project} />
         )}
         {activeTab === 'customer' && (
-          <CustomerDNATab dna={project.customer_dna} onUpdate={updateCustomerDNA} />
+          <CustomerDNATab dna={project.customer_dna} onUpdate={updateCustomerDNA} onRunAgent={runAgent} />
         )}
         {activeTab === 'app' && (
           <AppDNATab dna={project.app_dna} onUpdate={updateAppDNA} />
@@ -230,9 +239,56 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <LaunchTab project={project} onRunAgent={runAgent} />
         )}
         {activeTab === 'copy' && (
-          <CopyTab project={project} onRunAgent={runAgent} />
+          <CopyTab project={project} onRunAgent={runAgent} agentRunning={agentRunning} />
         )}
       </div>
+
+      {/* Agent Running Overlay */}
+      {agentRunning && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 text-center max-w-md">
+            <div className="w-12 h-12 border-4 border-[#1a1a2e] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 className="text-lg font-semibold text-[#11142D] mb-2">Running {agentRunning.replace(/_/g, ' ')}</h3>
+            <p className="text-sm text-[#808191]">This may take a moment...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Agent Results Modal */}
+      {agentResult && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-[#E4E4E4] flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-[#11142D]">
+                {agentResult.type.replace(/_/g, ' ')} Results
+              </h3>
+              <button
+                onClick={() => setAgentResult(null)}
+                className="p-2 hover:bg-[#F7F8FA] rounded-lg"
+              >
+                <svg className="w-5 h-5 text-[#808191]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 overflow-auto flex-1">
+              <pre className="text-sm text-[#11142D] whitespace-pre-wrap font-mono bg-[#F7F8FA] p-4 rounded-lg">
+                {typeof agentResult.output === 'string' 
+                  ? agentResult.output 
+                  : JSON.stringify(agentResult.output, null, 2)}
+              </pre>
+            </div>
+            <div className="p-4 border-t border-[#E4E4E4]">
+              <button
+                onClick={() => setAgentResult(null)}
+                className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg font-medium hover:bg-[#2d2d4a]"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -292,7 +348,7 @@ function OverviewTab({ project }: { project: Project }) {
 }
 
 // Customer DNA Tab
-function CustomerDNATab({ dna, onUpdate }: { dna?: CustomerDNA; onUpdate: (updates: Partial<CustomerDNA>) => void }) {
+function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUpdate: (updates: Partial<CustomerDNA>) => void; onRunAgent?: (type: string) => void }) {
   const [formData, setFormData] = useState<Partial<CustomerDNA>>(dna || {});
 
   useEffect(() => {
@@ -313,7 +369,7 @@ function CustomerDNATab({ dna, onUpdate }: { dna?: CustomerDNA; onUpdate: (updat
         <h3 className="text-lg font-semibold text-[#11142D]">Customer DNA</h3>
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-[#009FE2] text-white rounded-xl font-medium hover:bg-[#0088C2]"
+          className="px-4 py-2 bg-[#1a1a2e] text-white rounded-xl font-medium hover:bg-[#2d2d4a]"
         >
           Save Changes
         </button>
@@ -327,7 +383,7 @@ function CustomerDNATab({ dna, onUpdate }: { dna?: CustomerDNA; onUpdate: (updat
             value={formData.target_market || ''}
             onChange={(e) => handleChange('target_market', e.target.value)}
             placeholder="e.g., First-time course creators with less than 100 students"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
           />
         </div>
         <div>
@@ -337,7 +393,7 @@ function CustomerDNATab({ dna, onUpdate }: { dna?: CustomerDNA; onUpdate: (updat
             value={formData.demographics || ''}
             onChange={(e) => handleChange('demographics', e.target.value)}
             placeholder="e.g., 25-45, US-based, $50k-150k income"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
           />
         </div>
       </div>
@@ -349,54 +405,64 @@ function CustomerDNATab({ dna, onUpdate }: { dna?: CustomerDNA; onUpdate: (updat
           onChange={(e) => handleChange('main_problem', e.target.value)}
           placeholder="Describe the core problem your app solves in visceral detail..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
         />
       </div>
 
-      <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
-        <h4 className="font-semibold text-purple-900 mb-4">Transformation Map</h4>
+      <div className="p-4 bg-[#F7F8FA] rounded-xl border border-[#E4E4E4]">
+        <div className="flex justify-between items-center mb-4">
+          <h4 className="font-semibold text-[#11142D]">Transformation Map</h4>
+          {onRunAgent && (
+            <button
+              onClick={() => onRunAgent('transformation_mapper')}
+              className="px-3 py-1.5 bg-[#1a1a2e] text-white rounded-lg text-xs font-medium hover:bg-[#2d2d4a]"
+            >
+              Generate with AI
+            </button>
+          )}
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm font-medium text-purple-800 mb-2">BEFORE State</p>
+            <p className="text-sm font-medium text-red-700 mb-2">BEFORE State</p>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-purple-600">Emotional State</label>
+                <label className="text-xs text-red-600">Emotional State</label>
                 <input
                   type="text"
                   value={formData.before_emotional_state || ''}
                   onChange={(e) => handleChange('before_emotional_state', e.target.value)}
                   placeholder="Overwhelmed, drowning in..."
-                  className="w-full px-3 py-2 rounded-lg border border-purple-200 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-red-200 text-sm"
                 />
               </div>
               <div>
-                <label className="text-xs text-purple-600">Core Fear</label>
+                <label className="text-xs text-red-600">Core Fear</label>
                 <input
                   type="text"
                   value={formData.before_core_fear || ''}
                   onChange={(e) => handleChange('before_core_fear', e.target.value)}
                   placeholder="Afraid that..."
-                  className="w-full px-3 py-2 rounded-lg border border-purple-200 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-red-200 text-sm"
                 />
               </div>
               <div>
-                <label className="text-xs text-purple-600">Daily Experience</label>
+                <label className="text-xs text-red-600">Daily Experience</label>
                 <input
                   type="text"
                   value={formData.before_daily_experience || ''}
                   onChange={(e) => handleChange('before_daily_experience', e.target.value)}
                   placeholder="Every day they..."
-                  className="w-full px-3 py-2 rounded-lg border border-purple-200 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-red-200 text-sm"
                 />
               </div>
               <div>
-                <label className="text-xs text-purple-600">Self-Identity</label>
+                <label className="text-xs text-red-600">Self-Identity</label>
                 <input
                   type="text"
                   value={formData.before_self_identity || ''}
                   onChange={(e) => handleChange('before_self_identity', e.target.value)}
                   placeholder="They see themselves as..."
-                  className="w-full px-3 py-2 rounded-lg border border-purple-200 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-red-200 text-sm"
                 />
               </div>
             </div>
@@ -474,7 +540,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
         <h3 className="text-lg font-semibold text-[#11142D]">App DNA</h3>
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-[#009FE2] text-white rounded-xl font-medium hover:bg-[#0088C2]"
+          className="px-4 py-2 bg-[#1a1a2e] text-white rounded-xl font-medium hover:bg-[#2d2d4a]"
         >
           Save Changes
         </button>
@@ -488,7 +554,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
             value={formData.name || ''}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="e.g., CourseBot Pro"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
           />
         </div>
         <div>
@@ -498,7 +564,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
             value={formData.tagline || ''}
             onChange={(e) => handleChange('tagline', e.target.value)}
             placeholder="e.g., Your 24/7 student support team"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
           />
         </div>
       </div>
@@ -510,7 +576,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
           onChange={(e) => handleChange('problem_solved', e.target.value)}
           placeholder="Describe the core problem your app solves..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
         />
       </div>
 
@@ -548,7 +614,7 @@ function AppDNATab({ dna, onUpdate }: { dna?: AppDNA; onUpdate: (updates: Partia
           value={formData.deploy_url || ''}
           onChange={(e) => handleChange('deploy_url', e.target.value)}
           placeholder="https://your-app.vercel.app"
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
         />
       </div>
     </div>
@@ -577,7 +643,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
         <h3 className="text-lg font-semibold text-[#11142D]">Brand DNA</h3>
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-[#009FE2] text-white rounded-xl font-medium hover:bg-[#0088C2]"
+          className="px-4 py-2 bg-[#1a1a2e] text-white rounded-xl font-medium hover:bg-[#2d2d4a]"
         >
           Save Changes
         </button>
@@ -590,7 +656,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           onChange={(e) => handleChange('your_story', e.target.value)}
           placeholder="Share your journey... Why are you the right person to build this? What experience do you bring?"
           rows={4}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
         />
       </div>
 
@@ -601,7 +667,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           onChange={(e) => handleChange('credentials', e.target.value)}
           placeholder="List your relevant credentials, experience, results you've achieved..."
           rows={3}
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
         />
       </div>
 
@@ -611,7 +677,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
           <select
             value={formData.voice_tone || ''}
             onChange={(e) => handleChange('voice_tone', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
           >
             <option value="">Select tone...</option>
             <option value="casual">Casual & Friendly</option>
@@ -628,7 +694,7 @@ function BrandDNATab({ dna, onUpdate }: { dna?: BrandDNA; onUpdate: (updates: Pa
             value={(formData.banned_words || []).join(', ')}
             onChange={(e) => handleChange('banned_words', e.target.value.split(',').map(w => w.trim()))}
             placeholder="e.g., synergy, guru, hack, ninja"
-            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#009FE2] focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#1a1a2e] focus:outline-none"
           />
         </div>
       </div>
@@ -644,37 +710,37 @@ function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (t
       <p className="text-[#808191]">Use these AI agents to validate your app idea before building.</p>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
           <div className="text-2xl mb-2">🔍</div>
           <h4 className="font-semibold text-[#11142D] mb-1">App Idea Validator</h4>
           <p className="text-sm text-[#808191] mb-3">Analyze market size, competition, and demand score</p>
           <button
             onClick={() => onRunAgent('app_idea_validator')}
-            className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+            className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
           >
             Run Validator
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
           <div className="text-2xl mb-2">📊</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Niche Analyzer</h4>
           <p className="text-sm text-[#808191] mb-3">Discover top pain points, solutions, and gaps</p>
           <button
             onClick={() => onRunAgent('niche_analyzer')}
-            className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+            className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
           >
             Analyze Niche
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
           <div className="text-2xl mb-2">🎯</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Competitor X-Ray</h4>
           <p className="text-sm text-[#808191] mb-3">Analyze competitor features, pricing, and weaknesses</p>
           <button
             onClick={() => onRunAgent('competitor_xray')}
-            className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+            className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
           >
             X-Ray Competitor
           </button>
@@ -704,7 +770,7 @@ function BuildTab({ project }: { project: Project }) {
             { step: 6, title: 'Deploy', desc: 'Deploy to Vercel or Cloudflare' },
           ].map((item) => (
             <div key={item.step} className="flex items-center gap-3 p-3 bg-white rounded-lg">
-              <div className="w-8 h-8 bg-[#009FE2] text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="w-8 h-8 bg-[#1a1a2e] text-white rounded-full flex items-center justify-center text-sm font-bold">
                 {item.step}
               </div>
               <div>
@@ -740,37 +806,37 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
       <h3 className="text-lg font-semibold text-[#11142D]">Launch Command Center</h3>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
           <div className="text-2xl mb-2">📄</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Landing Page Generator</h4>
           <p className="text-sm text-[#808191] mb-3">Generate a complete landing page with 13 blocks</p>
           <button
             onClick={() => onRunAgent('landing_page_generator')}
-            className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+            className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
           >
             Generate Page
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
           <div className="text-2xl mb-2">📅</div>
           <h4 className="font-semibold text-[#11142D] mb-1">7-Day Launch Sequence</h4>
           <p className="text-sm text-[#808191] mb-3">Generate daily content for your launch</p>
           <button
             onClick={() => onRunAgent('launch_sequence_generator')}
-            className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+            className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
           >
             Generate Sequence
           </button>
         </div>
 
-        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+        <div className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
           <div className="text-2xl mb-2">💰</div>
           <h4 className="font-semibold text-[#11142D] mb-1">Offer Builder</h4>
           <p className="text-sm text-[#808191] mb-3">Create your pricing and bonus stack</p>
           <button
             onClick={() => onRunAgent('offer_builder')}
-            className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+            className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
           >
             Build Offer
           </button>
@@ -794,7 +860,7 @@ function LaunchTab({ project, onRunAgent }: { project: Project; onRunAgent: (typ
 }
 
 // Copy Tab
-function CopyTab({ project, onRunAgent }: { project: Project; onRunAgent: (type: string) => void }) {
+function CopyTab({ project, onRunAgent, agentRunning }: { project: Project; onRunAgent: (type: string) => void; agentRunning?: string | null }) {
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-[#11142D]">Copy Generators</h3>
@@ -809,13 +875,13 @@ function CopyTab({ project, onRunAgent }: { project: Project; onRunAgent: (type:
           { type: 'objection_handler', icon: '🛡️', name: 'Objection Handlers', desc: 'FAQ and rebuttals' },
           { type: 'case_study_generator', icon: '⭐', name: 'Case Studies', desc: 'Turn results into stories' },
         ].map((agent) => (
-          <div key={agent.type} className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#009FE2] transition-colors">
+          <div key={agent.type} className="p-4 border border-[#E4E4E4] rounded-xl hover:border-[#11142D] transition-colors">
             <div className="text-2xl mb-2">{agent.icon}</div>
             <h4 className="font-semibold text-[#11142D] mb-1">{agent.name}</h4>
             <p className="text-sm text-[#808191] mb-3">{agent.desc}</p>
             <button
               onClick={() => onRunAgent(agent.type)}
-              className="w-full px-4 py-2 bg-[#009FE2] text-white rounded-lg text-sm font-medium hover:bg-[#0088C2]"
+              className="w-full px-4 py-2 bg-[#1a1a2e] text-white rounded-lg text-sm font-medium hover:bg-[#2d2d4a]"
             >
               Generate
             </button>
