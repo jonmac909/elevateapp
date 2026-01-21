@@ -1,4 +1,4 @@
-// Elevate Academy App Builder Platform Types
+// ElevateOS App Builder Platform Types
 
 export interface CustomerDNA {
   id: string;

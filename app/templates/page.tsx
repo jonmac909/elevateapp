@@ -36,7 +36,7 @@ export default function TemplatesPage() {
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <Link href="/elevate" className="text-[#808191] hover:text-[#11142D]">
+        <Link href="/" className="text-[#808191] hover:text-[#11142D]">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -126,7 +126,7 @@ export default function TemplatesPage() {
                 
                 {/* CTA */}
                 <Link
-                  href={`/elevate?template=${template.id}`}
+                  href={`/?template=${template.id}`}
                   className="mt-4 block w-full text-center px-4 py-2 bg-[#009FE2] text-white rounded-xl font-medium hover:bg-[#0088C2] transition-colors"
                 >
                   Use This Template

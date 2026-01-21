@@ -158,7 +158,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="p-8 text-center">
         <h2 className="text-xl font-bold text-[#11142D] mb-2">Project not found</h2>
-        <Link href="/elevate" className="text-[#009FE2] hover:underline">Back to Elevate</Link>
+        <Link href="/" className="text-[#009FE2] hover:underline">Back to Dashboard</Link>
       </div>
     );
   }
@@ -167,7 +167,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/elevate" className="text-[#808191] hover:text-[#11142D]">
+        <Link href="/" className="text-[#808191] hover:text-[#11142D]">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
