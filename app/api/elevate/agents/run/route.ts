@@ -411,7 +411,7 @@ export async function POST(request: NextRequest) {
     const prompt = promptGenerator(context);
     
     const message = await anthropic.messages.create({
-      model: 'claude-opus-4-5-20250514',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
       messages: [
         {
@@ -576,6 +576,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error running agent:', error);
-    return NextResponse.json({ error: 'Agent execution failed' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Agent execution failed';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
