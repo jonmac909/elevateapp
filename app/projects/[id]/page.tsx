@@ -347,7 +347,7 @@ function CustomerDNATab({ dna, onUpdate, onRunAgent }: { dna?: CustomerDNA; onUp
 
   useEffect(() => {
     if (dna) setFormData(dna);
-  }, [dna]);
+  }, [JSON.stringify(dna)]);
 
   const handleChange = (field: keyof CustomerDNA, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -528,7 +528,7 @@ function AppDNATab({ dna, onUpdate, onRunAgent }: { dna?: AppDNA; onUpdate: (upd
 
   useEffect(() => {
     if (dna) setFormData(dna);
-  }, [dna]);
+  }, [JSON.stringify(dna)]);
 
   const handleChange = (field: keyof AppDNA, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -631,7 +631,7 @@ function BrandDNATab({ dna, onUpdate, onRunAgent }: { dna?: BrandDNA; onUpdate: 
 
   useEffect(() => {
     if (dna) setFormData(dna);
-  }, [dna]);
+  }, [JSON.stringify(dna)]);
 
   const handleChange = (field: keyof BrandDNA, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

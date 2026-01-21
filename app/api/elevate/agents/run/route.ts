@@ -421,7 +421,10 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const responseText = message.content[0].type === 'text' ? message.content[0].text : '';
+    let responseText = message.content[0].type === 'text' ? message.content[0].text : '';
+    
+    // Strip markdown code blocks if present
+    responseText = responseText.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim();
     
     // Try to parse as JSON, otherwise store as text
     let outputData: Record<string, unknown>;
