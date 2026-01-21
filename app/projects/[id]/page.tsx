@@ -300,29 +300,31 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 </svg>
               </button>
             </div>
-            <div className="p-4 overflow-auto flex-1 prose prose-sm max-w-none">
-              <div 
-                className="text-sm text-[#11142D]"
-                dangerouslySetInnerHTML={{ 
-                  __html: (() => {
-                    const output = agentResult.output as Record<string, unknown>;
-                    const text = typeof output === 'string' ? output : (output?.text as string) || JSON.stringify(output, null, 2);
-                    // Basic markdown to HTML conversion
-                    return text
-                      .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
-                      .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3">$1</h2>')
-                      .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-6 mb-4">$1</h1>')
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/^- (.*$)/gim, '<li class="ml-4">$1</li>')
-                      .replace(/^(\d+)\. (.*$)/gim, '<li class="ml-4">$2</li>')
-                      .replace(/\n\n/g, '</p><p class="mb-3">')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/---/g, '<hr class="my-4 border-gray-200"/>')
-                      .replace(/\|(.*)\|/g, (match) => `<div class="font-mono text-xs bg-gray-100 px-2 py-1 rounded">${match}</div>`);
-                  })()
+            <div className="p-4 overflow-auto flex-1">
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({children}) => <h1 className="text-xl font-bold mt-6 mb-4 text-[#11142D]">{children}</h1>,
+                  h2: ({children}) => <h2 className="text-lg font-bold mt-5 mb-3 text-[#11142D]">{children}</h2>,
+                  h3: ({children}) => <h3 className="text-base font-bold mt-4 mb-2 text-[#11142D]">{children}</h3>,
+                  p: ({children}) => <p className="my-2 text-[#11142D]">{children}</p>,
+                  ul: ({children}) => <ul className="list-disc ml-6 my-2">{children}</ul>,
+                  ol: ({children}) => <ol className="list-decimal ml-6 my-2">{children}</ol>,
+                  li: ({children}) => <li className="my-1">{children}</li>,
+                  strong: ({children}) => <strong className="font-bold">{children}</strong>,
+                  blockquote: ({children}) => <blockquote className="border-l-4 border-[#47A8DF] pl-4 my-3 italic text-[#808191]">{children}</blockquote>,
+                  hr: () => <hr className="my-4 border-[#E4E4E4]" />,
+                  table: ({children}) => <table className="w-full border-collapse my-4 text-sm">{children}</table>,
+                  thead: ({children}) => <thead className="bg-[#F7F8FA]">{children}</thead>,
+                  th: ({children}) => <th className="border border-[#E4E4E4] px-3 py-2 text-left font-semibold">{children}</th>,
+                  td: ({children}) => <td className="border border-[#E4E4E4] px-3 py-2">{children}</td>,
                 }}
-              />
+              >
+                {(() => {
+                  const output = agentResult.output as Record<string, unknown>;
+                  return typeof output === 'string' ? output : (output?.text as string) || JSON.stringify(output, null, 2);
+                })()}
+              </ReactMarkdown>
             </div>
             <div className="p-4 border-t border-[#E4E4E4]">
               <button
