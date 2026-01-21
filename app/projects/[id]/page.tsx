@@ -30,6 +30,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [agentRunning, setAgentRunning] = useState<string | null>(null);
   const [agentProgress, setAgentProgress] = useState<{ step: string; percent: number } | null>(null);
   const [agentResult, setAgentResult] = useState<{ type: string; output: unknown } | null>(null);
+  const [expandedResearch, setExpandedResearch] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     fetchProject();
@@ -137,20 +138,32 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }
     
     setAgentRunning(agentType);
-    setAgentProgress({ step: 'Initializing...', percent: 5 });
     
-    // Simulate progress updates
-    const progressSteps = [
-      { step: 'Analyzing project data...', percent: 15, delay: 1000 },
-      { step: 'Generating insights...', percent: 35, delay: 3000 },
-      { step: 'Processing with AI...', percent: 55, delay: 5000 },
-      { step: 'Refining results...', percent: 75, delay: 8000 },
-      { step: 'Finalizing...', percent: 90, delay: 12000 },
+    // Smooth progress animation that never gets stuck
+    let currentPercent = 0;
+    const steps = [
+      { threshold: 10, step: 'Sending request...' },
+      { threshold: 25, step: 'Analyzing project data...' },
+      { threshold: 45, step: 'Processing with AI...' },
+      { threshold: 65, step: 'Generating insights...' },
+      { threshold: 80, step: 'Refining results...' },
     ];
     
-    const progressTimers = progressSteps.map(({ step, percent, delay }) => 
-      setTimeout(() => setAgentProgress({ step, percent }), delay)
-    );
+    const getStepMessage = (percent: number) => {
+      for (let i = steps.length - 1; i >= 0; i--) {
+        if (percent >= steps[i].threshold) return steps[i].step;
+      }
+      return 'Initializing...';
+    };
+    
+    setAgentProgress({ step: 'Initializing...', percent: 0 });
+    
+    // Animate progress smoothly - fast at first, then slows down (never reaches 85% until done)
+    const progressInterval = setInterval(() => {
+      currentPercent += (85 - currentPercent) * 0.03; // Asymptotic approach to 85%
+      const displayPercent = Math.min(Math.round(currentPercent), 84);
+      setAgentProgress({ step: getStepMessage(displayPercent), percent: displayPercent });
+    }, 200);
     
     try {
       const res = await fetch('/api/elevate/agents/run', {
@@ -169,6 +182,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         if (!agentType.startsWith('fill_') && !researchAgents.includes(agentType)) {
           setAgentResult({ type: agentType, output: data.output });
         }
+        // Auto-expand research results
+        if (researchAgents.includes(agentType)) {
+          setExpandedResearch(prev => ({ ...prev, [agentType]: true }));
+        }
         fetchProject();
       } else {
         const error = await res.json();
@@ -178,9 +195,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       console.error('Error running agent:', error);
       alert('Agent execution failed. Check console for details.');
     } finally {
-      progressTimers.forEach(clearTimeout);
-      setAgentProgress(null);
-      setAgentRunning(null);
+      clearInterval(progressInterval);
+      setAgentProgress({ step: 'Complete!', percent: 100 });
+      setTimeout(() => {
+        setAgentProgress(null);
+        setAgentRunning(null);
+      }, 500);
     }
   };
 
@@ -247,7 +267,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <BrandDNATab dna={project.brand_dna} onUpdate={updateBrandDNA} onRunAgent={runAgent} />
         )}
         {activeTab === 'research' && (
-          <ResearchTab project={project} onRunAgent={runAgent} />
+          <ResearchTab project={project} onRunAgent={runAgent} expanded={expandedResearch} setExpanded={setExpandedResearch} />
         )}
         {activeTab === 'build' && (
           <BuildTab project={project} onUpdate={updateAppDNA} />
@@ -771,8 +791,12 @@ function BrandDNATab({ dna, onUpdate, onRunAgent }: { dna?: BrandDNA; onUpdate: 
 }
 
 // Research Tab
-function ResearchTab({ project, onRunAgent }: { project: Project; onRunAgent: (type: string) => void }) {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+function ResearchTab({ project, onRunAgent, expanded, setExpanded }: { 
+  project: Project; 
+  onRunAgent: (type: string) => void;
+  expanded: Record<string, boolean>;
+  setExpanded: (fn: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
+}) {
   
   const getResearchContent = (agentType: string) => {
     const assets = project.copy_assets?.filter(a => a.name === `Generated ${agentType}`) || [];
