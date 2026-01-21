@@ -8,9 +8,9 @@ type Tab = 'overview' | 'app' | 'brand' | 'customer' | 'research' | 'build' | 'l
 
 const TABS: { id: Tab; name: string }[] = [
   { id: 'overview', name: 'Overview' },
-  { id: 'app', name: 'App DNA' },
-  { id: 'brand', name: 'Brand DNA' },
-  { id: 'customer', name: 'Customer DNA' },
+  { id: 'app', name: 'App' },
+  { id: 'brand', name: 'Brand' },
+  { id: 'customer', name: 'Customer' },
   { id: 'research', name: 'Research' },
   { id: 'build', name: 'Build' },
   { id: 'launch', name: 'Launch' },
