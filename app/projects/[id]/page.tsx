@@ -145,9 +145,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     
     setAgentRunning(agentType);
     
-    // Time-based status messages (no fake percentages)
+    // Status messages that rotate while polling
     const statusMessages = [
-      'Sending request...',
+      'Starting agent...',
       'Analyzing project data...',
       'Processing with AI...',
       'Generating content...',
@@ -165,7 +165,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }, 5000);
     
     try {
-      const res = await fetch('/api/elevate/agents/run', {
+      // Step 1: Start the job (returns immediately with job_id)
+      const startRes = await fetch('/api/elevate/agents/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -174,19 +175,29 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           api_key: apiKey,
         }),
       });
-      if (res.ok) {
-        const data = await res.json();
+      
+      if (!startRes.ok) {
+        const error = await startRes.json();
+        alert(`Agent failed: ${error.error || 'Unknown error'}`);
+        return;
+      }
+      
+      const { job_id } = await startRes.json();
+      
+      // Step 2: Poll for results every 2 seconds
+      const result = await pollJobStatus(job_id);
+      
+      if (result.status === 'completed') {
         const researchAgents = ['app_idea_validator', 'niche_analyzer', 'competitor_xray'];
         if (!agentType.startsWith('fill_') && !researchAgents.includes(agentType)) {
-          setAgentResult({ type: agentType, output: data.output });
+          setAgentResult({ type: agentType, output: result.output });
         }
         if (researchAgents.includes(agentType)) {
           setExpandedResearch(prev => ({ ...prev, [agentType]: true }));
         }
         fetchProject();
-      } else {
-        const error = await res.json();
-        alert(`Agent failed: ${error.error || 'Unknown error'}`);
+      } else if (result.status === 'failed') {
+        alert(`Agent failed: ${result.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error running agent:', error);
@@ -199,6 +210,27 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         setAgentRunning(null);
       }, 500);
     }
+  };
+
+  /** Poll job status until completed or failed (max 5 minutes) */
+  const pollJobStatus = async (jobId: string): Promise<Record<string, unknown>> => {
+    const maxAttempts = 150; // 5 minutes at 2s intervals
+    for (let i = 0; i < maxAttempts; i++) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      try {
+        const res = await fetch(`/api/elevate/agents/status/${jobId}`);
+        if (!res.ok) continue;
+        
+        const data = await res.json();
+        if (data.status === 'completed' || data.status === 'failed') {
+          return data;
+        }
+      } catch {
+        // Network error — keep polling
+      }
+    }
+    return { status: 'failed', error: 'Timed out waiting for agent (5 minutes)' };
   };
 
   if (loading) {
