@@ -87,68 +87,74 @@ export function CustomerDNATab({
           )}
         </div>
 
-        <p className="text-sm text-[#808191] mb-4">BEFORE State</p>
-        <div className="space-y-4">
-          <FieldRowCard
-            label="Emotional State"
-            icon="💔"
-            value={formData.before_emotional_state || ''}
-            onChange={(value) => handleChange('before_emotional_state', value)}
-            placeholder="Overwhelmed, drowning in..."
-          />
-          <FieldRowCard
-            label="Core Fear"
-            icon="😨"
-            value={formData.before_core_fear || ''}
-            onChange={(value) => handleChange('before_core_fear', value)}
-            placeholder="Afraid that..."
-          />
-          <FieldRowCard
-            label="Daily Experience"
-            icon="📅"
-            value={formData.before_daily_experience || ''}
-            onChange={(value) => handleChange('before_daily_experience', value)}
-            placeholder="Every day they..."
-          />
-          <FieldRowCard
-            label="Self-Identity"
-            icon="🪞"
-            value={formData.before_self_identity || ''}
-            onChange={(value) => handleChange('before_self_identity', value)}
-            placeholder="They see themselves as..."
-          />
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p className="text-sm font-medium text-red-600 mb-4">😰 BEFORE State</p>
+            <div className="space-y-4">
+              <FieldRowCard
+                label="Emotional State"
+                icon="💔"
+                value={formData.before_emotional_state || ''}
+                onChange={(value) => handleChange('before_emotional_state', value)}
+                placeholder="Overwhelmed, drowning in..."
+              />
+              <FieldRowCard
+                label="Core Fear"
+                icon="😨"
+                value={formData.before_core_fear || ''}
+                onChange={(value) => handleChange('before_core_fear', value)}
+                placeholder="Afraid that..."
+              />
+              <FieldRowCard
+                label="Daily Experience"
+                icon="📅"
+                value={formData.before_daily_experience || ''}
+                onChange={(value) => handleChange('before_daily_experience', value)}
+                placeholder="Every day they..."
+              />
+              <FieldRowCard
+                label="Self-Identity"
+                icon="🪞"
+                value={formData.before_self_identity || ''}
+                onChange={(value) => handleChange('before_self_identity', value)}
+                placeholder="They see themselves as..."
+              />
+            </div>
+          </div>
 
-        <p className="text-sm text-[#808191] mb-4 mt-8">AFTER State</p>
-        <div className="space-y-4">
-          <FieldRowCard
-            label="Emotional State"
-            icon="💚"
-            value={formData.after_emotional_state || ''}
-            onChange={(value) => handleChange('after_emotional_state', value)}
-            placeholder="Confident, in control..."
-          />
-          <FieldRowCard
-            label="Core Fear (Resolved)"
-            icon="🛡️"
-            value={formData.after_core_fear || ''}
-            onChange={(value) => handleChange('after_core_fear', value)}
-            placeholder="Now they believe..."
-          />
-          <FieldRowCard
-            label="Daily Experience"
-            icon="🌟"
-            value={formData.after_daily_experience || ''}
-            onChange={(value) => handleChange('after_daily_experience', value)}
-            placeholder="Now every day they..."
-          />
-          <FieldRowCard
-            label="Self-Identity"
-            icon="👑"
-            value={formData.after_self_identity || ''}
-            onChange={(value) => handleChange('after_self_identity', value)}
-            placeholder="They see themselves as..."
-          />
+          <div>
+            <p className="text-sm font-medium text-green-600 mb-4">✨ AFTER State</p>
+            <div className="space-y-4">
+              <FieldRowCard
+                label="Emotional State"
+                icon="💚"
+                value={formData.after_emotional_state || ''}
+                onChange={(value) => handleChange('after_emotional_state', value)}
+                placeholder="Confident, in control..."
+              />
+              <FieldRowCard
+                label="Core Fear (Resolved)"
+                icon="🛡️"
+                value={formData.after_core_fear || ''}
+                onChange={(value) => handleChange('after_core_fear', value)}
+                placeholder="Now they believe..."
+              />
+              <FieldRowCard
+                label="Daily Experience"
+                icon="🌟"
+                value={formData.after_daily_experience || ''}
+                onChange={(value) => handleChange('after_daily_experience', value)}
+                placeholder="Now every day they..."
+              />
+              <FieldRowCard
+                label="Self-Identity"
+                icon="👑"
+                value={formData.after_self_identity || ''}
+                onChange={(value) => handleChange('after_self_identity', value)}
+                placeholder="They see themselves as..."
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
