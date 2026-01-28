@@ -48,9 +48,9 @@ export function ContentField({
       'hover:bg-[var(--hover-bg)]': !isFocused,
       // Focus state
       'bg-[var(--hover-bg)] border-b-2 border-b-[var(--primary)]': isFocused,
-      // Large hero fields
+      // Large hero fields (bold only for single-line like app name)
       'text-2xl font-bold': large && !multiline,
-      'text-lg font-semibold': large && multiline,
+      'text-lg': large && multiline,
       // Normal fields
       'text-base': !large,
       // Multiline

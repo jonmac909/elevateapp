@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { AppDNA } from '@/lib/elevate-types';
 import { ContentField } from '@/components/ui/ContentField';
 import { SectionCard } from '@/components/ui/SectionCard';
+import { ModalFieldButton } from '@/components/ui/FieldModal';
 
 export function AppDNATab({ 
   dna, 
@@ -69,7 +70,7 @@ export function AppDNATab({
         />
       </div>
 
-      {/* Problem Solved */}
+      {/* Problem Solved - NOT bold */}
       <div className="pt-4">
         <ContentField
           label="Problem Solved"
@@ -78,26 +79,28 @@ export function AppDNATab({
           onChange={(value) => handleChange('problem_solved', value)}
           placeholder="Describe the core problem your app solves..."
           multiline
-          large
         />
       </div>
 
-      {/* Unique Mechanism Section */}
+      {/* Unique Mechanism Section - Modal buttons */}
       <SectionCard
         title="Unique Mechanism"
         description="Give your solution a proprietary name that makes it memorable and differentiates you from competitors."
         accentColor="#47A8DF"
         icon="⚡"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ContentField
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ModalFieldButton
             label="Mechanism Name"
+            icon="🏷️"
             value={formData.unique_mechanism || ''}
             onChange={(value) => handleChange('unique_mechanism', value)}
             placeholder='e.g., "The Knowledge Engine Protocol"'
+            multiline={false}
           />
-          <ContentField
+          <ModalFieldButton
             label="Description"
+            icon="📝"
             value={formData.unique_mechanism_description || ''}
             onChange={(value) => handleChange('unique_mechanism_description', value)}
             placeholder="How it works in one sentence..."

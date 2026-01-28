@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CustomerDNA } from '@/lib/elevate-types';
 import { ContentField } from '@/components/ui/ContentField';
 import { SectionCard } from '@/components/ui/SectionCard';
+import { ModalFieldButton } from '@/components/ui/FieldModal';
 
 export function CustomerDNATab({ 
   dna, 
@@ -51,16 +52,16 @@ export function CustomerDNATab({
         </div>
       </div>
 
-      {/* Target Market & Demographics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-        <ContentField
+      {/* Target Market & Demographics - Modal buttons */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+        <ModalFieldButton
           label="Target Market"
           icon="🎯"
           value={formData.target_market || ''}
           onChange={(value) => handleChange('target_market', value)}
           placeholder="e.g., First-time course creators with less than 100 students"
         />
-        <ContentField
+        <ModalFieldButton
           label="Demographics"
           icon="👥"
           value={formData.demographics || ''}
@@ -69,7 +70,7 @@ export function CustomerDNATab({
         />
       </div>
 
-      {/* Main Problem */}
+      {/* Main Problem - NOT bold */}
       <div className="pt-4">
         <ContentField
           label="Main Problem"
@@ -78,7 +79,6 @@ export function CustomerDNATab({
           onChange={(value) => handleChange('main_problem', value)}
           placeholder="Describe the core problem your app solves in visceral detail..."
           multiline
-          large
         />
       </div>
 

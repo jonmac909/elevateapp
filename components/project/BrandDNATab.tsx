@@ -3,15 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BrandDNA } from '@/lib/elevate-types';
 import { ContentField } from '@/components/ui/ContentField';
-import { cn } from '@/lib/utils';
-
-const voiceTones = [
-  { value: 'casual', label: 'Casual & Friendly' },
-  { value: 'professional', label: 'Professional' },
-  { value: 'authoritative', label: 'Authoritative' },
-  { value: 'empathetic', label: 'Empathetic & Warm' },
-  { value: 'energetic', label: 'Energetic & Bold' },
-];
+import { ModalFieldButton } from '@/components/ui/FieldModal';
 
 export function BrandDNATab({ 
   dna, 
@@ -23,7 +15,6 @@ export function BrandDNATab({
   onRunAgent?: (type: string) => void;
 }) {
   const [formData, setFormData] = useState<Partial<BrandDNA>>(dna || {});
-  const [showToneOptions, setShowToneOptions] = useState(false);
 
   useEffect(() => {
     if (dna) setFormData(dna);
@@ -36,8 +27,6 @@ export function BrandDNATab({
   const handleSave = () => {
     onUpdate(formData);
   };
-
-  const selectedTone = voiceTones.find(t => t.value === formData.voice_tone);
 
   return (
     <div className="space-y-8 max-w-5xl">
@@ -62,7 +51,7 @@ export function BrandDNATab({
         </div>
       </div>
 
-      {/* Your Story - Hero Field */}
+      {/* Your Story - NOT bold */}
       <div className="pt-4">
         <ContentField
           label="Your Story"
@@ -71,11 +60,10 @@ export function BrandDNATab({
           onChange={(value) => handleChange('your_story', value)}
           placeholder="Share your journey... Why are you the right person to build this? What experience do you bring?"
           multiline
-          large
         />
       </div>
 
-      {/* Credentials */}
+      {/* Credentials - NOT bold */}
       <ContentField
         label="Credentials"
         icon="🏆"
@@ -85,62 +73,23 @@ export function BrandDNATab({
         multiline
       />
 
-      {/* Voice Tone & Banned Words */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-        {/* Custom Voice Tone Selector */}
-        <div className="space-y-2">
-          <label className="flex items-center gap-2 text-sm font-medium text-[var(--muted)] px-4">
-            <span className="text-base">🎭</span>
-            Voice Tone
-          </label>
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowToneOptions(!showToneOptions)}
-              className={cn(
-                'w-full px-4 py-3 rounded-lg text-left',
-                'border border-transparent',
-                'transition-all duration-200',
-                'text-[var(--foreground)] bg-transparent',
-                'hover:bg-[var(--hover-bg)]',
-                'focus:outline-none focus:bg-[var(--hover-bg)] focus:border-b-2 focus:border-b-[var(--primary)]',
-                !formData.voice_tone && 'italic text-gray-400 dark:text-gray-600'
-              )}
-            >
-              {selectedTone?.label || 'Select tone...'}
-            </button>
-            
-            {showToneOptions && (
-              <div className="absolute z-10 w-full mt-1 py-1 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg shadow-lg">
-                {voiceTones.map((tone) => (
-                  <button
-                    key={tone.value}
-                    type="button"
-                    onClick={() => {
-                      handleChange('voice_tone', tone.value);
-                      setShowToneOptions(false);
-                    }}
-                    className={cn(
-                      'w-full px-4 py-2 text-left transition-colors duration-150',
-                      'hover:bg-[var(--hover-bg)]',
-                      formData.voice_tone === tone.value && 'bg-[var(--hover-bg)] text-[var(--primary)]'
-                    )}
-                  >
-                    {tone.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Banned Words */}
-        <ContentField
+      {/* Voice Tone & Banned Words - Modal buttons */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+        <ModalFieldButton
+          label="Voice Tone"
+          icon="🎭"
+          value={formData.voice_tone || ''}
+          onChange={(value) => handleChange('voice_tone', value)}
+          placeholder="e.g., Casual & Friendly, Professional, Authoritative..."
+          multiline={false}
+        />
+        <ModalFieldButton
           label="Banned Words"
           icon="🚫"
           value={(formData.banned_words || []).join(', ')}
           onChange={(value) => handleChange('banned_words', value.split(',').map(w => w.trim()))}
           placeholder="e.g., synergy, guru, hack, ninja"
+          multiline={false}
         />
       </div>
     </div>
