@@ -34,7 +34,6 @@ export function AgentResultsModal({
             const output = agentResult.output as Record<string, unknown>;
             const text = typeof output === 'string' ? output : (output?.text as string);
             
-            // If it's markdown/text content, use ReactMarkdown
             if (text) {
               return (
                 <ReactMarkdown 
@@ -61,76 +60,194 @@ export function AgentResultsModal({
               );
             }
             
-            // For landing page generator - render as visual preview
+            // Landing page generator — polished preview
             if (agentResult.type === 'landing_page_generator' && output?.hero) {
               const lp = output as {
                 hero?: { headline?: string; subheadline?: string; cta_button_text?: string };
                 problem_agitation?: { section_headline?: string; body?: string[] };
                 solution_introduction?: { section_headline?: string; body?: string[] };
                 features?: { section_headline?: string; features_list?: { headline?: string; description?: string }[] };
-                pricing?: { plans?: { name?: string; price?: string; features?: string[] }[] };
+                social_proof?: { section_headline?: string; testimonials?: { name?: string; quote?: string; result?: string }[] };
+                pricing?: { plans?: { name?: string; price?: string; features?: string[]; highlighted?: boolean }[] };
+                faq?: { questions?: { question?: string; answer?: string }[] };
+                final_cta?: { headline?: string; subheadline?: string; cta_button_text?: string };
               };
               return (
-                <div className="space-y-8">
-                  {/* Hero */}
+                <div className="bg-white">
+                  {/* Hero Section */}
                   {lp.hero && (
-                    <div className="bg-gradient-to-br from-[#47A8DF] to-[#3B96C9] text-white p-8 rounded-xl text-center">
-                      <h1 className="text-2xl font-bold mb-3">{lp.hero.headline}</h1>
-                      <p className="text-white/90 mb-4">{lp.hero.subheadline}</p>
-                      <button className="bg-white text-[#47A8DF] px-6 py-2 rounded-lg font-semibold">{lp.hero.cta_button_text}</button>
+                    <div className="relative overflow-hidden rounded-xl mb-8">
+                      <div className="bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-white px-10 py-16 text-center">
+                        <h1 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight tracking-tight">
+                          {lp.hero.headline}
+                        </h1>
+                        <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+                          {lp.hero.subheadline}
+                        </p>
+                        <button className="bg-[#47A8DF] hover:bg-[#3B96C9] text-white px-8 py-3 rounded-lg font-semibold text-lg shadow-lg shadow-[#47A8DF]/30 transition-all">
+                          {lp.hero.cta_button_text || 'Get Started'}
+                        </button>
+                      </div>
                     </div>
                   )}
-                  {/* Problem */}
+
+                  {/* Problem Section */}
                   {lp.problem_agitation && (
-                    <div className="bg-[#F7F8FA] p-6 rounded-xl">
-                      <h2 className="text-lg font-bold text-[#11142D] mb-3">{lp.problem_agitation.section_headline}</h2>
-                      {lp.problem_agitation.body?.map((p, i) => <p key={i} className="text-[#808191] mb-2">{p}</p>)}
+                    <div className="mb-8 px-6">
+                      <h2 className="text-2xl font-bold text-[#11142D] mb-4">
+                        {lp.problem_agitation.section_headline}
+                      </h2>
+                      <div className="space-y-3">
+                        {lp.problem_agitation.body?.map((p, i) => (
+                          <p key={i} className="text-[#4B5563] leading-relaxed text-base">{p}</p>
+                        ))}
+                      </div>
                     </div>
                   )}
-                  {/* Solution */}
+
+                  {/* Solution Section */}
                   {lp.solution_introduction && (
-                    <div className="p-6 border border-[#E4E4E4] rounded-xl">
-                      <h2 className="text-lg font-bold text-[#11142D] mb-3">{lp.solution_introduction.section_headline}</h2>
-                      {lp.solution_introduction.body?.map((p, i) => <p key={i} className="text-[#808191] mb-2">{p}</p>)}
+                    <div className="mb-8 bg-[#F0F9FF] rounded-xl p-8">
+                      <h2 className="text-2xl font-bold text-[#11142D] mb-4">
+                        {lp.solution_introduction.section_headline}
+                      </h2>
+                      <div className="space-y-3">
+                        {lp.solution_introduction.body?.map((p, i) => (
+                          <p key={i} className="text-[#4B5563] leading-relaxed text-base">{p}</p>
+                        ))}
+                      </div>
                     </div>
                   )}
-                  {/* Features */}
+
+                  {/* Features Section */}
                   {lp.features && (
-                    <div>
-                      <h2 className="text-lg font-bold text-[#11142D] mb-4">{lp.features.section_headline}</h2>
-                      <div className="grid grid-cols-2 gap-4">
+                    <div className="mb-8 px-6">
+                      <h2 className="text-2xl font-bold text-[#11142D] mb-6 text-center">
+                        {lp.features.section_headline}
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {lp.features.features_list?.map((f, i) => (
-                          <div key={i} className="p-4 bg-white border border-[#E4E4E4] rounded-xl">
-                            <h3 className="font-semibold text-[#11142D] mb-1">{f.headline}</h3>
-                            <p className="text-sm text-[#808191]">{f.description}</p>
+                          <div key={i} className="flex gap-4 p-5 bg-[#F9FAFB] rounded-xl">
+                            <div className="flex-shrink-0 w-10 h-10 bg-[#47A8DF]/10 rounded-lg flex items-center justify-center">
+                              <svg className="w-5 h-5 text-[#47A8DF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-[#11142D] mb-1">{f.headline}</h3>
+                              <p className="text-sm text-[#6B7280] leading-relaxed">{f.description}</p>
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
-                  {/* Pricing */}
+
+                  {/* Social Proof */}
+                  {lp.social_proof?.testimonials && lp.social_proof.testimonials.length > 0 && (
+                    <div className="mb-8 px-6">
+                      <h2 className="text-2xl font-bold text-[#11142D] mb-6 text-center">
+                        {lp.social_proof.section_headline || 'What People Are Saying'}
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {lp.social_proof.testimonials.map((t, i) => (
+                          <div key={i} className="p-5 border border-[#E5E7EB] rounded-xl">
+                            <p className="text-[#4B5563] italic mb-3">&ldquo;{t.quote}&rdquo;</p>
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 bg-[#47A8DF]/20 rounded-full flex items-center justify-center text-sm font-bold text-[#47A8DF]">
+                                {t.name?.[0] || '?'}
+                              </div>
+                              <div>
+                                <p className="font-semibold text-sm text-[#11142D]">{t.name}</p>
+                                {t.result && <p className="text-xs text-[#47A8DF]">{t.result}</p>}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pricing Section */}
                   {lp.pricing?.plans && (
-                    <div>
-                      <h2 className="text-lg font-bold text-[#11142D] mb-4 text-center">Pricing</h2>
-                      <div className="grid grid-cols-3 gap-4">
-                        {lp.pricing.plans.map((plan, i) => (
-                          <div key={i} className="p-4 border border-[#E4E4E4] rounded-xl text-center">
-                            <h3 className="font-semibold text-[#11142D]">{plan.name}</h3>
-                            <p className="text-2xl font-bold text-[#47A8DF] my-2">{plan.price}</p>
-                            <ul className="text-sm text-[#808191] space-y-1">
-                              {plan.features?.slice(0, 4).map((f, j) => <li key={j}>✓ {f}</li>)}
-                            </ul>
+                    <div className="mb-8 px-6">
+                      <h2 className="text-2xl font-bold text-[#11142D] mb-6 text-center">Pricing</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {lp.pricing.plans.map((plan, i) => {
+                          const isHighlighted = plan.highlighted || i === 1;
+                          return (
+                            <div 
+                              key={i} 
+                              className={`p-6 rounded-xl text-center ${
+                                isHighlighted 
+                                  ? 'bg-[#0f172a] text-white ring-2 ring-[#47A8DF] scale-105' 
+                                  : 'border border-[#E5E7EB]'
+                              }`}
+                            >
+                              <h3 className={`font-semibold text-lg mb-2 ${isHighlighted ? 'text-white' : 'text-[#11142D]'}`}>
+                                {plan.name}
+                              </h3>
+                              <p className={`text-3xl font-extrabold mb-4 ${isHighlighted ? 'text-[#47A8DF]' : 'text-[#11142D]'}`}>
+                                {plan.price}
+                              </p>
+                              <ul className={`text-sm space-y-2 mb-6 ${isHighlighted ? 'text-white/80' : 'text-[#6B7280]'}`}>
+                                {plan.features?.map((f, j) => (
+                                  <li key={j} className="flex items-center gap-2">
+                                    <svg className={`w-4 h-4 flex-shrink-0 ${isHighlighted ? 'text-[#47A8DF]' : 'text-green-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    {f}
+                                  </li>
+                                ))}
+                              </ul>
+                              <button className={`w-full py-2.5 rounded-lg font-semibold text-sm ${
+                                isHighlighted 
+                                  ? 'bg-[#47A8DF] text-white' 
+                                  : 'border border-[#47A8DF] text-[#47A8DF]'
+                              }`}>
+                                Get Started
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* FAQ */}
+                  {lp.faq?.questions && lp.faq.questions.length > 0 && (
+                    <div className="mb-8 px-6">
+                      <h2 className="text-2xl font-bold text-[#11142D] mb-6 text-center">FAQ</h2>
+                      <div className="space-y-3 max-w-2xl mx-auto">
+                        {lp.faq.questions.map((q, i) => (
+                          <div key={i} className="p-4 bg-[#F9FAFB] rounded-xl">
+                            <h3 className="font-semibold text-[#11142D] mb-1">{q.question}</h3>
+                            <p className="text-sm text-[#6B7280]">{q.answer}</p>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
-                  <p className="text-xs text-[#808191] text-center">This is a preview. Full landing page saved to your project.</p>
+
+                  {/* Final CTA */}
+                  {lp.final_cta && (
+                    <div className="bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-white px-10 py-12 rounded-xl text-center">
+                      <h2 className="text-2xl font-bold mb-3">{lp.final_cta.headline}</h2>
+                      <p className="text-white/80 mb-6 max-w-xl mx-auto">{lp.final_cta.subheadline}</p>
+                      <button className="bg-[#47A8DF] hover:bg-[#3B96C9] text-white px-8 py-3 rounded-lg font-semibold text-lg shadow-lg shadow-[#47A8DF]/30">
+                        {lp.final_cta.cta_button_text || 'Get Started Now'}
+                      </button>
+                    </div>
+                  )}
+
+                  <p className="text-xs text-[#808191] text-center mt-6">
+                    This is a preview. Full landing page saved to your project.
+                  </p>
                 </div>
               );
             }
             
-            // Fallback for other JSON - show formatted
+            // Fallback for other JSON
             return (
               <pre className="text-sm bg-[#F7F8FA] p-4 rounded-lg overflow-auto whitespace-pre-wrap">
                 {JSON.stringify(output, null, 2)}
