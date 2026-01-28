@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { BrandDNA } from '@/lib/elevate-types';
-import { ContentField } from '@/components/ui/ContentField';
-import { ModalFieldButton } from '@/components/ui/FieldModal';
 
 export function BrandDNATab({ 
   dna, 
@@ -29,68 +27,75 @@ export function BrandDNATab({
   };
 
   return (
-    <div className="space-y-8 max-w-5xl">
-      {/* Header with Actions */}
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-[var(--foreground)]">Brand DNA</h3>
-        <div className="flex gap-3">
+        <h3 className="text-lg font-semibold text-[#11142D]">Brand DNA</h3>
+        <div className="flex gap-2">
           {onRunAgent && (
             <button
               onClick={() => onRunAgent('fill_brand_dna')}
-              className="px-4 py-2 border border-[var(--primary)] text-[var(--primary)] rounded-xl font-medium hover:bg-[var(--primary)] hover:text-white transition-all duration-200"
+              className="px-4 py-2 border border-[#47A8DF] text-[#47A8DF] rounded-xl font-medium hover:bg-[#47A8DF] hover:text-white transition-colors"
             >
               ✨ Fill with AI
             </button>
           )}
           <button
             onClick={handleSave}
-            className="px-6 py-2 bg-[var(--primary)] text-white rounded-xl font-medium hover:bg-[var(--primary-dark)] transition-all duration-200"
+            className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
           >
             Save Changes
           </button>
         </div>
       </div>
 
-      {/* Your Story - NOT bold */}
-      <div className="pt-4">
-        <ContentField
-          label="Your Story"
-          icon="📖"
+      <div>
+        <label className="block text-sm font-medium text-[#11142D] mb-2">Your Story</label>
+        <textarea
           value={formData.your_story || ''}
-          onChange={(value) => handleChange('your_story', value)}
+          onChange={(e) => handleChange('your_story', e.target.value)}
           placeholder="Share your journey... Why are you the right person to build this? What experience do you bring?"
-          multiline
+          rows={4}
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
         />
       </div>
 
-      {/* Credentials - NOT bold */}
-      <ContentField
-        label="Credentials"
-        icon="🏆"
-        value={formData.credentials || ''}
-        onChange={(value) => handleChange('credentials', value)}
-        placeholder="List your relevant credentials, experience, results you've achieved..."
-        multiline
-      />
+      <div>
+        <label className="block text-sm font-medium text-[#11142D] mb-2">Credentials</label>
+        <textarea
+          value={formData.credentials || ''}
+          onChange={(e) => handleChange('credentials', e.target.value)}
+          placeholder="List your relevant credentials, experience, results you've achieved..."
+          rows={3}
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+        />
+      </div>
 
-      {/* Voice Tone & Banned Words - Modal buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-        <ModalFieldButton
-          label="Voice Tone"
-          icon="🎭"
-          value={formData.voice_tone || ''}
-          onChange={(value) => handleChange('voice_tone', value)}
-          placeholder="e.g., Casual & Friendly, Professional, Authoritative..."
-          multiline={false}
-        />
-        <ModalFieldButton
-          label="Banned Words"
-          icon="🚫"
-          value={(formData.banned_words || []).join(', ')}
-          onChange={(value) => handleChange('banned_words', value.split(',').map(w => w.trim()))}
-          placeholder="e.g., synergy, guru, hack, ninja"
-          multiline={false}
-        />
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-[#11142D] mb-2">Voice Tone</label>
+          <select
+            value={formData.voice_tone || ''}
+            onChange={(e) => handleChange('voice_tone', e.target.value)}
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+          >
+            <option value="">Select tone...</option>
+            <option value="casual">Casual & Friendly</option>
+            <option value="professional">Professional</option>
+            <option value="authoritative">Authoritative</option>
+            <option value="empathetic">Empathetic & Warm</option>
+            <option value="energetic">Energetic & Bold</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#11142D] mb-2">Banned Words</label>
+          <input
+            type="text"
+            value={(formData.banned_words || []).join(', ')}
+            onChange={(e) => handleChange('banned_words', e.target.value.split(',').map(w => w.trim()))}
+            placeholder="e.g., synergy, guru, hack, ninja"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+          />
+        </div>
       </div>
     </div>
   );

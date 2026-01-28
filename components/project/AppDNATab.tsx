@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { AppDNA } from '@/lib/elevate-types';
-import { ContentField } from '@/components/ui/ContentField';
-import { SectionCard } from '@/components/ui/SectionCard';
-import { ModalFieldButton } from '@/components/ui/FieldModal';
 
 export function AppDNATab({ 
   dna, 
@@ -30,83 +27,83 @@ export function AppDNATab({
   };
 
   return (
-    <div className="space-y-8 max-w-5xl">
-      {/* Header with Actions */}
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-[var(--foreground)]">App DNA</h3>
-        <div className="flex gap-3">
+        <h3 className="text-lg font-semibold text-[#11142D]">App DNA</h3>
+        <div className="flex gap-2">
           {onRunAgent && (
             <button
               onClick={() => onRunAgent('fill_app_dna')}
-              className="px-4 py-2 border border-[var(--primary)] text-[var(--primary)] rounded-xl font-medium hover:bg-[var(--primary)] hover:text-white transition-all duration-200"
+              className="px-4 py-2 border border-[#47A8DF] text-[#47A8DF] rounded-xl font-medium hover:bg-[#47A8DF] hover:text-white transition-colors"
             >
               ✨ Fill with AI
             </button>
           )}
           <button
             onClick={handleSave}
-            className="px-6 py-2 bg-[var(--primary)] text-white rounded-xl font-medium hover:bg-[var(--primary-dark)] transition-all duration-200"
+            className="px-4 py-2 bg-[#47A8DF] text-white rounded-xl font-medium hover:bg-[#3B96C9]"
           >
             Save Changes
           </button>
         </div>
       </div>
 
-      {/* Hero Fields - App Name & Tagline */}
-      <div className="space-y-6 pt-4">
-        <ContentField
-          value={formData.name || ''}
-          onChange={(value) => handleChange('name', value)}
-          placeholder="Your App Name"
-          large
-        />
-        
-        <ContentField
-          value={formData.tagline || ''}
-          onChange={(value) => handleChange('tagline', value)}
-          placeholder="A compelling tagline that captures what you do..."
-          large
-          className="text-lg font-normal"
-        />
-      </div>
-
-      {/* Problem Solved - NOT bold */}
-      <div className="pt-4">
-        <ContentField
-          label="Problem Solved"
-          icon="🎯"
-          value={formData.problem_solved || ''}
-          onChange={(value) => handleChange('problem_solved', value)}
-          placeholder="Describe the core problem your app solves..."
-          multiline
-        />
-      </div>
-
-      {/* Unique Mechanism Section - Modal buttons */}
-      <SectionCard
-        title="Unique Mechanism"
-        description="Give your solution a proprietary name that makes it memorable and differentiates you from competitors."
-        accentColor="#47A8DF"
-        icon="⚡"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ModalFieldButton
-            label="Mechanism Name"
-            icon="🏷️"
-            value={formData.unique_mechanism || ''}
-            onChange={(value) => handleChange('unique_mechanism', value)}
-            placeholder='e.g., "The Knowledge Engine Protocol"'
-            multiline={false}
-          />
-          <ModalFieldButton
-            label="Description"
-            icon="📝"
-            value={formData.unique_mechanism_description || ''}
-            onChange={(value) => handleChange('unique_mechanism_description', value)}
-            placeholder="How it works in one sentence..."
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-[#11142D] mb-2">App Name</label>
+          <input
+            type="text"
+            value={formData.name || ''}
+            onChange={(e) => handleChange('name', e.target.value)}
+            placeholder="e.g., CourseBot Pro"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
           />
         </div>
-      </SectionCard>
+        <div>
+          <label className="block text-sm font-medium text-[#11142D] mb-2">Tagline</label>
+          <input
+            type="text"
+            value={formData.tagline || ''}
+            onChange={(e) => handleChange('tagline', e.target.value)}
+            placeholder="e.g., Your 24/7 student support team"
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-[#11142D] mb-2">Problem Solved</label>
+        <textarea
+          value={formData.problem_solved || ''}
+          onChange={(e) => handleChange('problem_solved', e.target.value)}
+          placeholder="Describe the core problem your app solves..."
+          rows={4}
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-[#11142D] mb-2">Mechanism Name</label>
+          <input
+            type="text"
+            value={formData.unique_mechanism || ''}
+            onChange={(e) => handleChange('unique_mechanism', e.target.value)}
+            placeholder='e.g., "The Knowledge Engine Protocol"'
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#11142D] mb-2">Mechanism Description</label>
+          <input
+            type="text"
+            value={formData.unique_mechanism_description || ''}
+            onChange={(e) => handleChange('unique_mechanism_description', e.target.value)}
+            placeholder="How it works in one sentence..."
+            className="w-full px-4 py-3 rounded-xl border border-[#E4E4E4] focus:border-[#47A8DF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#47A8DF] focus-visible:ring-offset-2"
+          />
+        </div>
+      </div>
     </div>
   );
 }
