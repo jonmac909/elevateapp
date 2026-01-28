@@ -60,8 +60,35 @@ export function AgentResultsModal({
               );
             }
             
-            // Landing page generator — polished preview
-            if (agentResult.type === 'landing_page_generator' && output?.hero) {
+            // Landing page generator — render full HTML in iframe, or fall back to structured preview
+            if (agentResult.type === 'landing_page_generator') {
+              // Check if output is full HTML
+              const htmlContent = typeof output === 'string' ? output : (output?.text as string);
+              if (htmlContent && htmlContent.includes('<!DOCTYPE') || htmlContent?.includes('<html')) {
+                return (
+                  <div className="bg-white">
+                    <iframe
+                      srcDoc={htmlContent}
+                      className="w-full border-0 rounded-xl"
+                      style={{ height: '70vh' }}
+                      title="Landing Page Preview"
+                      sandbox="allow-scripts"
+                    />
+                    <p className="text-xs text-[#808191] text-center mt-4">
+                      Full HTML landing page saved to your project.
+                    </p>
+                  </div>
+                );
+              }
+
+              // Fallback: structured JSON preview (legacy format)
+              if (!output?.hero) {
+                return (
+                  <pre className="text-sm bg-[#F7F8FA] p-4 rounded-lg overflow-auto whitespace-pre-wrap">
+                    {JSON.stringify(output, null, 2)}
+                  </pre>
+                );
+              }
               const lp = output as {
                 hero?: { headline?: string; subheadline?: string; cta_button_text?: string };
                 problem_agitation?: { section_headline?: string; body?: string[] };
