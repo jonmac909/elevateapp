@@ -145,30 +145,24 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     
     setAgentRunning(agentType);
     
-    // Smooth progress animation
-    let currentPercent = 0;
-    const steps = [
-      { threshold: 10, step: 'Sending request...' },
-      { threshold: 25, step: 'Analyzing project data...' },
-      { threshold: 45, step: 'Processing with AI...' },
-      { threshold: 65, step: 'Generating insights...' },
-      { threshold: 80, step: 'Refining results...' },
+    // Time-based status messages (no fake percentages)
+    const statusMessages = [
+      'Sending request...',
+      'Analyzing project data...',
+      'Processing with AI...',
+      'Generating content...',
+      'This may take a minute for complex outputs...',
+      'Still working — crafting quality results...',
+      'Almost there — finishing up...',
     ];
+    let messageIndex = 0;
     
-    const getStepMessage = (percent: number) => {
-      for (let i = steps.length - 1; i >= 0; i--) {
-        if (percent >= steps[i].threshold) return steps[i].step;
-      }
-      return 'Initializing...';
-    };
-    
-    setAgentProgress({ step: 'Initializing...', percent: 0 });
+    setAgentProgress({ step: statusMessages[0], percent: 0 });
     
     const progressInterval = setInterval(() => {
-      currentPercent += (85 - currentPercent) * 0.03;
-      const displayPercent = Math.min(Math.round(currentPercent), 84);
-      setAgentProgress({ step: getStepMessage(displayPercent), percent: displayPercent });
-    }, 200);
+      messageIndex = Math.min(messageIndex + 1, statusMessages.length - 1);
+      setAgentProgress({ step: statusMessages[messageIndex], percent: 0 });
+    }, 5000);
     
     try {
       const res = await fetch('/api/elevate/agents/run', {
