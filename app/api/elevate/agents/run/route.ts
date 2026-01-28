@@ -425,7 +425,7 @@ export async function POST(request: NextRequest) {
     
     const message = await anthropic.messages.create({
       model: 'claude-opus-4-5-20251101',
-      max_tokens: agent_type === 'landing_page_generator' ? 16384 : 4096,
+      max_tokens: agent_type === 'landing_page_generator' ? 8192 : 4096,
       messages: [
         {
           role: 'user',

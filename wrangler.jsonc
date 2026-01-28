@@ -16,5 +16,8 @@
   ],
   "vars": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://vrpoistmzewykpkemmer.supabase.co"
+  },
+  "limits": {
+    "cpu_ms": 300000
   }
 }
