@@ -32,16 +32,14 @@ export function FieldModal({
     if (open) {
       setLocalValue(value);
       setTimeout(() => {
-        if (multiline && textareaRef.current) {
+        if (textareaRef.current) {
           textareaRef.current.focus();
           textareaRef.current.style.height = 'auto';
-          textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-        } else if (!multiline && inputRef.current) {
-          inputRef.current.focus();
+          textareaRef.current.style.height = Math.max(textareaRef.current.scrollHeight, 200) + 'px';
         }
       }, 100);
     }
-  }, [open, value, multiline]);
+  }, [open, value]);
 
   const handleSave = () => {
     onChange(localValue);
@@ -83,48 +81,28 @@ export function FieldModal({
 
         {/* Content */}
         <div className="p-6">
-          {multiline ? (
-            <textarea
-              ref={textareaRef}
-              value={localValue}
-              onChange={(e) => {
-                setLocalValue(e.target.value);
-                e.target.style.height = 'auto';
-                e.target.style.height = e.target.scrollHeight + 'px';
-              }}
-              onKeyDown={handleKeyDown}
-              placeholder={placeholder}
-              className={cn(
-                'w-full px-4 py-3 rounded-xl',
-                'border border-[var(--border)]',
-                'bg-[var(--hover-bg)]',
-                'text-[var(--foreground)] text-base leading-relaxed',
-                'placeholder:italic placeholder:text-gray-400 dark:placeholder:text-gray-600',
-                'focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20',
-                'resize-none overflow-hidden',
-                'transition-all duration-200'
-              )}
-              style={{ minHeight: '160px' }}
-            />
-          ) : (
-            <input
-              ref={inputRef}
-              type="text"
-              value={localValue}
-              onChange={(e) => setLocalValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={placeholder}
-              className={cn(
-                'w-full px-4 py-3 rounded-xl',
-                'border border-[var(--border)]',
-                'bg-[var(--hover-bg)]',
-                'text-[var(--foreground)] text-base',
-                'placeholder:italic placeholder:text-gray-400 dark:placeholder:text-gray-600',
-                'focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20',
-                'transition-all duration-200'
-              )}
-            />
-          )}
+          <textarea
+            ref={textareaRef}
+            value={localValue}
+            onChange={(e) => {
+              setLocalValue(e.target.value);
+              e.target.style.height = 'auto';
+              e.target.style.height = Math.max(e.target.scrollHeight, 200) + 'px';
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className={cn(
+              'w-full px-4 py-3 rounded-xl',
+              'border border-[var(--border)]',
+              'bg-[var(--hover-bg)]',
+              'text-[var(--foreground)] text-base leading-relaxed',
+              'placeholder:italic placeholder:text-gray-400 dark:placeholder:text-gray-600',
+              'focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20',
+              'resize-none overflow-hidden',
+              'transition-all duration-200'
+            )}
+            style={{ minHeight: '200px' }}
+          />
         </div>
 
         {/* Footer */}
