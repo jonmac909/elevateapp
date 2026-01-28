@@ -48,13 +48,6 @@ export function FieldRowCard({
           {icon && <span className="text-2xl flex-shrink-0">{icon}</span>}
           <div className="min-w-0 flex-1">
             <h4 className="font-semibold text-[#11142D]">{label}</h4>
-            {!expanded && (
-              preview ? (
-                <p className="text-sm text-[#808191] truncate">{preview}</p>
-              ) : (
-                <p className="text-sm text-[#808191] italic">{placeholder || 'Not set'}</p>
-              )
-            )}
           </div>
         </div>
         <svg
