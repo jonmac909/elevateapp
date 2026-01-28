@@ -427,7 +427,7 @@ export async function POST(request: NextRequest) {
     // Use Opus for content/strategy tasks
     const designAgents = ['landing_page_generator'];
     const model = designAgents.includes(agent_type) 
-      ? 'claude-sonnet-4-5-20250514' 
+      ? 'claude-sonnet-4-5-20241022' 
       : 'claude-opus-4-5-20251101';
     
     const message = await anthropic.messages.create({
