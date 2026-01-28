@@ -420,11 +420,18 @@ export async function POST(request: NextRequest) {
       console.error('Error creating agent run:', runError);
     }
 
-    // Call Claude API
+    // Call Claude API with streaming to avoid Cloudflare 524 timeouts
     const prompt = promptGenerator(context);
     
+    // Use Sonnet for design-heavy tasks (faster, avoids 524 timeouts)
+    // Use Opus for content/strategy tasks
+    const designAgents = ['landing_page_generator'];
+    const model = designAgents.includes(agent_type) 
+      ? 'claude-sonnet-4-5-20250514' 
+      : 'claude-opus-4-5-20251101';
+    
     const message = await anthropic.messages.create({
-      model: 'claude-opus-4-5-20251101',
+      model,
       max_tokens: agent_type === 'landing_page_generator' ? 8192 : 4096,
       messages: [
         {
