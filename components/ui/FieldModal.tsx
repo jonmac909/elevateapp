@@ -9,7 +9,6 @@ interface FieldModalProps {
   onChange: (value: string) => void;
   placeholder?: string;
   icon?: string;
-  multiline?: boolean;
   open: boolean;
   onClose: () => void;
 }
@@ -20,13 +19,11 @@ export function FieldModal({
   onChange,
   placeholder,
   icon,
-  multiline = true,
   open,
   onClose,
 }: FieldModalProps) {
   const [localValue, setLocalValue] = useState(value);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -48,22 +45,17 @@ export function FieldModal({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') onClose();
-    if (!multiline && e.key === 'Enter') handleSave();
   };
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
-
-      {/* Modal */}
-      <div className="relative w-full max-w-2xl bg-[var(--card-bg)] rounded-2xl shadow-2xl border border-[var(--border)] animate-in fade-in zoom-in-95 duration-200">
-        {/* Header */}
+      <div className="relative w-full max-w-2xl bg-[var(--card-bg)] rounded-2xl shadow-2xl border border-[var(--border)]">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
           <div className="flex items-center gap-2">
             {icon && <span className="text-lg">{icon}</span>}
@@ -78,8 +70,6 @@ export function FieldModal({
             </svg>
           </button>
         </div>
-
-        {/* Content */}
         <div className="p-6">
           <textarea
             ref={textareaRef}
@@ -104,8 +94,6 @@ export function FieldModal({
             style={{ minHeight: '200px' }}
           />
         </div>
-
-        {/* Footer */}
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-[var(--border)]">
           <button
             onClick={onClose}
@@ -125,66 +113,53 @@ export function FieldModal({
   );
 }
 
-// Button that shows truncated value and opens modal on click
-interface ModalFieldButtonProps {
+// Row card that matches Research tab style: icon + title + preview + Edit button
+interface FieldRowCardProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   icon?: string;
-  multiline?: boolean;
 }
 
-export function ModalFieldButton({
+export function FieldRowCard({
   label,
   value,
   onChange,
   placeholder,
   icon,
-  multiline = true,
-}: ModalFieldButtonProps) {
+}: FieldRowCardProps) {
   const [open, setOpen] = useState(false);
 
-  const displayValue = value
-    ? value.length > 80
-      ? value.slice(0, 80) + '…'
+  const preview = value
+    ? value.length > 120
+      ? value.slice(0, 120) + '…'
       : value
     : null;
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className={cn(
-          'w-full text-left px-4 py-3 rounded-xl',
-          'border border-[var(--border)]',
-          'bg-[var(--card-bg)]',
-          'hover:bg-[var(--hover-bg)] hover:border-[var(--primary)]/40',
-          'transition-all duration-200',
-          'group cursor-pointer'
-        )}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            {icon && <span className="text-base flex-shrink-0">{icon}</span>}
-            <span className="text-sm font-medium text-[var(--muted)]">{label}</span>
+      <div className="border border-[#E4E4E4] rounded-xl overflow-hidden">
+        <div className="p-4 bg-[#F7F8FA] flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            {icon && <span className="text-2xl flex-shrink-0">{icon}</span>}
+            <div className="min-w-0 flex-1">
+              <h4 className="font-semibold text-[#11142D]">{label}</h4>
+              {preview ? (
+                <p className="text-sm text-[#808191] truncate">{preview}</p>
+              ) : (
+                <p className="text-sm text-[#808191] italic">{placeholder || 'Not set'}</p>
+              )}
+            </div>
           </div>
-          <svg
-            className="size-4 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors flex-shrink-0 ml-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <button
+            onClick={() => setOpen(true)}
+            className="px-4 py-2 bg-[#47A8DF] text-white rounded-lg text-sm font-medium hover:bg-[#3B96C9] flex-shrink-0 ml-4"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-          </svg>
+            Edit
+          </button>
         </div>
-        {displayValue ? (
-          <p className="mt-2 text-sm text-[var(--foreground)] truncate">{displayValue}</p>
-        ) : (
-          <p className="mt-2 text-sm italic text-gray-400 dark:text-gray-600">{placeholder || 'Click to edit...'}</p>
-        )}
-      </button>
+      </div>
 
       <FieldModal
         label={label}
@@ -192,10 +167,12 @@ export function ModalFieldButton({
         onChange={onChange}
         placeholder={placeholder}
         icon={icon}
-        multiline={multiline}
         open={open}
         onClose={() => setOpen(false)}
       />
     </>
   );
 }
+
+// Keep ModalFieldButton for backward compat (alias to FieldRowCard)
+export const ModalFieldButton = FieldRowCard;
