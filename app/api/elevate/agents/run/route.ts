@@ -43,46 +43,28 @@ Provide:
 4. Their Weaknesses
 5. Differentiation Opportunities`,
 
-  landing_page_generator: (ctx) => `You are an elite frontend designer and landing page expert. Create a COMPLETE, production-ready HTML landing page.
+  landing_page_generator: (ctx) => `You are a landing page copywriter. Generate copy for a landing page with these sections:
 
-## App Context
-- App Name: ${ctx.app_name || 'Not specified'}
-- Tagline: ${ctx.tagline || 'Not specified'}
-- Problem: ${ctx.problem || 'Not specified'}
-- Target Customer: ${ctx.target_market || 'Not specified'}
-- Before State: ${ctx.before_emotional_state || 'Not specified'}
-- After State: ${ctx.after_emotional_state || 'Not specified'}
-- Unique Mechanism: ${ctx.unique_mechanism || 'Not specified'}
-- Credentials: ${ctx.credentials || 'Not specified'}
+App: ${ctx.app_name || 'Not specified'}
+Tagline: ${ctx.tagline || 'Not specified'}
+Problem: ${ctx.problem || 'Not specified'}
+Target Customer: ${ctx.target_market || 'Not specified'}
+Before State: ${ctx.before_emotional_state || 'Not specified'}
+After State: ${ctx.after_emotional_state || 'Not specified'}
+Unique Mechanism: ${ctx.unique_mechanism || 'Not specified'}
+Credentials: ${ctx.credentials || 'Not specified'}
 
-## Design Requirements
-Create a visually STUNNING, modern landing page with these qualities:
-- **Typography**: Use Google Fonts (import via link tag). Pick a distinctive display font paired with a clean body font. NOT Inter, Roboto, or Arial.
-- **Color**: Bold, intentional color palette. Dark hero sections with vibrant accent colors. Not generic blue-on-white.
-- **Layout**: Full-width sections with generous padding. Asymmetric elements where appropriate. Visual depth with gradients, shadows, and layering.
-- **Motion**: Add CSS animations for scroll-reveal effects, hover states, and micro-interactions.
-- **Visual Details**: Gradient meshes, subtle patterns, glowing effects on CTAs, testimonial cards with depth.
-- **Mobile responsive**: Use modern CSS (flexbox, grid, clamp(), media queries).
+Generate compelling copy for each section:
+1. Hero (headline, subheadline, CTA button text)
+2. Problem Agitation (section_headline, body as array of paragraphs)
+3. Solution Introduction (section_headline, body as array of paragraphs)
+4. Features (section_headline, features_list as array of {headline, description})
+5. Social Proof (section_headline, testimonials as array of {name, quote, result})
+6. Pricing (plans as array of {name, price, features array, highlighted boolean})
+7. FAQ (questions as array of {question, answer})
+8. Final CTA (headline, subheadline, cta_button_text)
 
-## Required Sections (13 blocks)
-1. **Hero** - Full-width, dark/gradient background, massive headline, compelling subheadline, glowing CTA button
-2. **Problem Agitation** - Visceral pain points, emotional language
-3. **Solution Introduction** - Light background shift, introduce the app
-4. **Features** - 3-5 features in a visually interesting grid (icons, cards with hover effects)
-5. **How It Works** - 3 numbered steps with visual flow
-6. **Transformation** - Before/After comparison (side by side or stacked)
-7. **Social Proof** - 3 testimonial cards with names, roles, quotes (use realistic placeholder data)
-8. **Pricing** - 2-3 tier cards, middle one highlighted/elevated
-9. **FAQ** - 5 questions in accordion or clean list style
-10. **Guarantee** - Trust badge, risk reversal copy
-11. **About/Story** - Founder credibility section
-12. **Final CTA** - Dark section, urgency, final push
-13. **Footer** - Clean, minimal
-
-## Output Format
-Output ONLY the complete HTML document (starting with <!DOCTYPE html>). Include ALL CSS inline in a <style> tag. Include any JS for interactions in a <script> tag. Do NOT use external CSS frameworks like Bootstrap or Tailwind — write custom CSS. Import Google Fonts via <link> in the <head>.
-
-The page must look like it was designed by a top agency — not a generic template. Make bold, distinctive design choices.`,
+Output as JSON with keys: hero, problem_agitation, solution_introduction, features, social_proof, pricing, faq, final_cta.`,
 
   launch_sequence_generator: (ctx) => `You are a launch sequence copywriter. Generate a 7-day Instagram story launch sequence:
 
@@ -423,16 +405,9 @@ export async function POST(request: NextRequest) {
     // Call Claude API with streaming to avoid Cloudflare 524 timeouts
     const prompt = promptGenerator(context);
     
-    // Use Sonnet for design-heavy tasks (faster, avoids 524 timeouts)
-    // Use Opus for content/strategy tasks
-    const designAgents = ['landing_page_generator'];
-    const model = designAgents.includes(agent_type) 
-      ? 'claude-sonnet-4-5-20241022' 
-      : 'claude-opus-4-5-20251101';
-    
     const message = await anthropic.messages.create({
-      model,
-      max_tokens: agent_type === 'landing_page_generator' ? 8192 : 4096,
+      model: 'claude-opus-4-5-20251101',
+      max_tokens: 4096,
       messages: [
         {
           role: 'user',
