@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CustomerDNA } from '@/lib/elevate-types';
-import { ContentField } from '@/components/ui/ContentField';
 import { ModalFieldButton } from '@/components/ui/FieldModal';
-import { SectionCard } from '@/components/ui/SectionCard';
 
 export function CustomerDNATab({ 
   dna, 
@@ -31,7 +29,6 @@ export function CustomerDNATab({
 
   return (
     <div className="space-y-8 max-w-5xl">
-      {/* Header with Actions */}
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-[var(--foreground)]">Customer DNA</h3>
         <div className="flex gap-3">
@@ -52,8 +49,7 @@ export function CustomerDNATab({
         </div>
       </div>
 
-      {/* Target Market & Demographics - Modal buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ModalFieldButton
           label="Target Market"
           icon="🎯"
@@ -70,25 +66,20 @@ export function CustomerDNATab({
         />
       </div>
 
-      {/* Main Problem */}
-      <div className="pt-4">
-        <ContentField
-          label="Main Problem"
-          icon="💭"
-          value={formData.main_problem || ''}
-          onChange={(value) => handleChange('main_problem', value)}
-          placeholder="Describe the core problem your app solves in visceral detail..."
-          multiline
-        />
-      </div>
+      <ModalFieldButton
+        label="Main Problem"
+        icon="💭"
+        value={formData.main_problem || ''}
+        onChange={(value) => handleChange('main_problem', value)}
+        placeholder="Describe the core problem your app solves in visceral detail..."
+      />
 
       {/* Transformation Map */}
-      <div className="pt-4">
-        <div className="flex justify-between items-center mb-4 px-4">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🔄</span>
-            <h4 className="font-semibold text-[var(--foreground)]">Transformation Map</h4>
-          </div>
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h4 className="font-semibold text-[var(--foreground)] flex items-center gap-2">
+            <span>🔄</span> Transformation Map
+          </h4>
           {onRunAgent && (
             <button
               onClick={() => onRunAgent('transformation_mapper')}
@@ -101,70 +92,70 @@ export function CustomerDNATab({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* BEFORE State */}
-          <SectionCard
-            title="BEFORE State"
-            accentColor="#EF4444"
-            icon="😰"
-            className="bg-red-50/50 dark:bg-red-950/20"
-          >
-            <ContentField
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-red-600 px-1">😰 BEFORE State</p>
+            <ModalFieldButton
               label="Emotional State"
+              icon="💔"
               value={formData.before_emotional_state || ''}
               onChange={(value) => handleChange('before_emotional_state', value)}
               placeholder="Overwhelmed, drowning in..."
             />
-            <ContentField
+            <ModalFieldButton
               label="Core Fear"
+              icon="😨"
               value={formData.before_core_fear || ''}
               onChange={(value) => handleChange('before_core_fear', value)}
               placeholder="Afraid that..."
             />
-            <ContentField
+            <ModalFieldButton
               label="Daily Experience"
+              icon="📅"
               value={formData.before_daily_experience || ''}
               onChange={(value) => handleChange('before_daily_experience', value)}
               placeholder="Every day they..."
             />
-            <ContentField
+            <ModalFieldButton
               label="Self-Identity"
+              icon="🪞"
               value={formData.before_self_identity || ''}
               onChange={(value) => handleChange('before_self_identity', value)}
               placeholder="They see themselves as..."
             />
-          </SectionCard>
+          </div>
 
           {/* AFTER State */}
-          <SectionCard
-            title="AFTER State"
-            accentColor="#22C55E"
-            icon="✨"
-            className="bg-green-50/50 dark:bg-green-950/20"
-          >
-            <ContentField
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-green-600 px-1">✨ AFTER State</p>
+            <ModalFieldButton
               label="Emotional State"
+              icon="💚"
               value={formData.after_emotional_state || ''}
               onChange={(value) => handleChange('after_emotional_state', value)}
               placeholder="Confident, in control..."
             />
-            <ContentField
+            <ModalFieldButton
               label="Core Fear (Resolved)"
+              icon="🛡️"
               value={formData.after_core_fear || ''}
               onChange={(value) => handleChange('after_core_fear', value)}
               placeholder="Now they believe..."
             />
-            <ContentField
+            <ModalFieldButton
               label="Daily Experience"
+              icon="🌟"
               value={formData.after_daily_experience || ''}
               onChange={(value) => handleChange('after_daily_experience', value)}
               placeholder="Now every day they..."
             />
-            <ContentField
+            <ModalFieldButton
               label="Self-Identity"
+              icon="👑"
               value={formData.after_self_identity || ''}
               onChange={(value) => handleChange('after_self_identity', value)}
               placeholder="They see themselves as..."
             />
-          </SectionCard>
+          </div>
         </div>
       </div>
     </div>

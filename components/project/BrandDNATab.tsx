@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { BrandDNA } from '@/lib/elevate-types';
-import { ContentField } from '@/components/ui/ContentField';
 import { ModalFieldButton } from '@/components/ui/FieldModal';
 
 export function BrandDNATab({ 
@@ -30,7 +29,6 @@ export function BrandDNATab({
 
   return (
     <div className="space-y-8 max-w-5xl">
-      {/* Header with Actions */}
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-[var(--foreground)]">Brand DNA</h3>
         <div className="flex gap-3">
@@ -51,37 +49,29 @@ export function BrandDNATab({
         </div>
       </div>
 
-      {/* Your Story - NOT bold */}
-      <div className="pt-4">
-        <ContentField
-          label="Your Story"
-          icon="📖"
-          value={formData.your_story || ''}
-          onChange={(value) => handleChange('your_story', value)}
-          placeholder="Share your journey... Why are you the right person to build this? What experience do you bring?"
-          multiline
-        />
-      </div>
+      <ModalFieldButton
+        label="Your Story"
+        icon="📖"
+        value={formData.your_story || ''}
+        onChange={(value) => handleChange('your_story', value)}
+        placeholder="Share your journey... Why are you the right person to build this?"
+      />
 
-      {/* Credentials - NOT bold */}
-      <ContentField
+      <ModalFieldButton
         label="Credentials"
         icon="🏆"
         value={formData.credentials || ''}
         onChange={(value) => handleChange('credentials', value)}
         placeholder="List your relevant credentials, experience, results you've achieved..."
-        multiline
       />
 
-      {/* Voice Tone & Banned Words - Modal buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ModalFieldButton
           label="Voice Tone"
           icon="🎭"
           value={formData.voice_tone || ''}
           onChange={(value) => handleChange('voice_tone', value)}
           placeholder="e.g., Casual & Friendly, Professional, Authoritative..."
-          multiline={false}
         />
         <ModalFieldButton
           label="Banned Words"
@@ -89,7 +79,6 @@ export function BrandDNATab({
           value={(formData.banned_words || []).join(', ')}
           onChange={(value) => handleChange('banned_words', value.split(',').map(w => w.trim()))}
           placeholder="e.g., synergy, guru, hack, ninja"
-          multiline={false}
         />
       </div>
     </div>
