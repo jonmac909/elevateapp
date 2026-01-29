@@ -186,10 +186,51 @@ export interface Template {
 }
 
 // Agent types for the AI system
+// Viability Score for idea validation
+export interface ViabilityScore {
+  overall: number; // 0-100
+  market_size: number; // 0-100
+  competition: number; // 0-100 (higher = less competition = better)
+  demand: number; // 0-100
+  monetization: number; // 0-100
+  trend: number; // 0-100
+  verdict: 'go' | 'caution' | 'no-go';
+  verdict_reasoning: string;
+}
+
+// Extended app idea with viability score
+export interface AppIdeaWithScore {
+  name: string;
+  description: string;
+  target_market: string;
+  problem_solved: string;
+  revenue_model: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  build_time: string;
+  unique_mechanism: string;
+  emoji: string;
+  viability_score?: ViabilityScore;
+}
+
+// Truth Report - unified research summary
+export interface TruthReport {
+  viability: ViabilityScore;
+  market_snapshot: {
+    size: string;
+    growth: string;
+    key_players: string[];
+  };
+  top_pain_points: string[];
+  competitor_weaknesses: string[];
+  recommended_positioning: string;
+  generated_at: string;
+}
+
 export type AgentType = 
   | 'app_idea_validator'
   | 'niche_analyzer'
   | 'competitor_xray'
+  | 'truth_report_generator'
   | 'transformation_mapper'
   | 'landing_page_generator'
   | 'launch_sequence_generator'

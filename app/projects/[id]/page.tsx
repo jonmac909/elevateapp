@@ -136,13 +136,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const runAgent = async (agentType: string) => {
     if (!project) return;
     
-    // Get API key from localStorage
-    const apiKey = localStorage.getItem('claudeApiKey');
-    if (!apiKey) {
-      alert('Please add your Claude API key in Settings first.');
-      return;
-    }
-    
     setAgentRunning(agentType);
     
     // Status messages that rotate while polling
@@ -172,7 +165,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         body: JSON.stringify({
           project_id: project.id,
           agent_type: agentType,
-          api_key: apiKey,
         }),
       });
       
@@ -188,7 +180,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       const result = await pollJobStatus(job_id);
       
       if (result.status === 'completed') {
-        const researchAgents = ['app_idea_validator', 'niche_analyzer', 'competitor_xray'];
+        const researchAgents = ['app_idea_validator', 'niche_analyzer', 'competitor_xray', 'truth_report_generator'];
         if (!agentType.startsWith('fill_') && !researchAgents.includes(agentType)) {
           setAgentResult({ type: agentType, output: result.output });
         }

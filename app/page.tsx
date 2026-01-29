@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Project, Template, ProjectStatus } from '@/lib/elevate-types';
-import { LoadingState, PageHeader, useToast } from '@/components/ui';
+import { Project, Template, ProjectStatus, AppIdeaWithScore } from '@/lib/elevate-types';
+import { LoadingState, PageHeader, useToast, ViabilityScoreBadge } from '@/components/ui';
 
 const STATUS_COLORS: Record<ProjectStatus, { bg: string; text: string; label: string }> = {
   research: { bg: 'bg-purple-100', text: 'text-purple-700', label: 'Research' },
@@ -135,6 +135,56 @@ export default function ElevatePage() {
             <p className="text-3xl font-bold mt-1 text-[#11142D]">{stat.value}</p>
           </div>
         ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        {/* Discover Ideas CTA */}
+        <Link 
+          href="/discover"
+          className="bg-gradient-to-br from-[#47A8DF] to-[#3B96C9] rounded-xl p-6 text-white hover:shadow-lg transition-all group"
+        >
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-3xl mb-2">💡</div>
+              <h3 className="text-xl font-bold mb-1">Discover App Ideas</h3>
+              <p className="text-white/80 text-sm">AI-validated ideas with viability scores</p>
+            </div>
+            <svg className="size-6 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-sm text-white/80">
+            <span>⚡</span>
+            <span>Generate ideas in ~30 seconds</span>
+          </div>
+        </Link>
+
+        {/* Speed Stats */}
+        <div className="bg-white rounded-xl border border-[#E4E4E4] p-6">
+          <div className="flex items-center gap-2 text-[#808191] text-sm mb-4">
+            <span>⚡</span>
+            <span>Platform Stats</span>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-2xl font-bold text-[#11142D]">~30s</p>
+              <p className="text-sm text-[#808191]">Idea generation</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-[#11142D]">~2min</p>
+              <p className="text-sm text-[#808191]">Full validation</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-[#11142D]">0-100</p>
+              <p className="text-sm text-[#808191]">Viability scores</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-[#11142D]">7 days</p>
+              <p className="text-sm text-[#808191]">Launch sequence</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Projects Grid */}

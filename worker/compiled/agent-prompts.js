@@ -1,127 +1,51 @@
+"use strict";
 /**
  * Shared agent prompt definitions and model routing.
  * Used by both the sync /api/elevate/agents/run and async /api/elevate/agents/start routes.
  */
-
-const AGENT_PROMPTS: Record<string, (context: Record<string, unknown>) => string> = {
-  app_idea_validator: (ctx) => `You are an expert market analyst and app idea validator. Analyze this app idea and provide a comprehensive viability assessment.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAgentPrompt = getAgentPrompt;
+exports.getAgentModel = getAgentModel;
+exports.getAgentModelGateway = getAgentModelGateway;
+exports.isValidAgentType = isValidAgentType;
+const AGENT_PROMPTS = {
+    app_idea_validator: (ctx) => `You are an app idea validator. Analyze this app idea and provide:
+1. Market Size (estimate)
+2. Competition Level (1-10)
+3. Demand Score (1-10)
+4. Key Risks
+5. Opportunities
+6. Recommendation (Build/Pivot/Pass)
 
 App Idea:
 - Name: ${ctx.app_name || 'Not specified'}
 - Problem: ${ctx.problem || 'Not specified'}
 - Target Market: ${ctx.target_market || 'Not specified'}
-- Unique Mechanism: ${ctx.unique_mechanism || 'Not specified'}
 
-Analyze and score each dimension from 0-100:
+Provide your analysis in a structured format.`,
+    niche_analyzer: (ctx) => `You are a niche market analyst. Analyze this niche and provide:
+1. Top 5 Pain Points (with frequency estimates)
+2. Existing Solutions (and their weaknesses)
+3. Market Gaps (opportunities)
+4. Recommended Positioning
+5. Price Sensitivity Analysis
 
-1. **Market Size** (0-100): How large is the addressable market? Consider TAM, SAM, SOM.
-2. **Competition** (0-100): Score INVERSELY - 100 = very low competition (good), 0 = saturated market (bad)
-3. **Demand** (0-100): Evidence of active demand? Search volume, community discussions, complaints about existing solutions.
-4. **Monetization** (0-100): How easily can this be monetized? Willingness to pay, proven business models in space.
-5. **Trend** (0-100): Is this a growing or declining market? Emerging tech, changing behaviors.
-
-Then calculate:
-- **Overall Score**: Weighted average (Market 25%, Competition 20%, Demand 25%, Monetization 15%, Trend 15%)
-- **Verdict**: "go" (71-100), "caution" (41-70), or "no-go" (0-40)
-
-Also provide:
-- Key Risks (3-5 bullet points)
-- Opportunities (3-5 bullet points)
-- Verdict Reasoning (2-3 sentences explaining your recommendation)
-
-Return as JSON:
-{
-  "viability_score": {
-    "overall": number,
-    "market_size": number,
-    "competition": number,
-    "demand": number,
-    "monetization": number,
-    "trend": number,
-    "verdict": "go" | "caution" | "no-go",
-    "verdict_reasoning": "string"
-  },
-  "market_size_estimate": "string (e.g., '$2.4B TAM')",
-  "key_risks": ["string"],
-  "opportunities": ["string"],
-  "detailed_analysis": "string (markdown formatted detailed analysis)"
-}`,
-
-  niche_analyzer: (ctx) => `You are a niche market analyst. Perform deep analysis on this niche:
-
-App Name: ${ctx.app_name || 'Not specified'}
-Target Market: ${ctx.target_market || 'Not specified'}
+Niche: ${ctx.target_market || 'Not specified'}
 Problem Area: ${ctx.problem || 'Not specified'}
 
-Provide comprehensive analysis:
+Provide actionable insights.`,
+    competitor_xray: (ctx) => `You are a competitive intelligence analyst. Based on the provided context, analyze competitors in this space:
 
-1. **Top 5 Pain Points** - Ranked by severity and frequency
-   - Include specific examples and emotional impact
-   - Estimate how many people experience each
-
-2. **Existing Solutions** - What's currently available?
-   - List 3-5 alternatives
-   - Their limitations and weaknesses
-
-3. **Market Gaps** - Unmet needs and opportunities
-   - What are people asking for that doesn't exist?
-   - What's broken about current solutions?
-
-4. **Recommended Positioning** - How to stand out
-   - Unique angle to take
-   - Messaging that resonates
-
-5. **Price Sensitivity** - What will people pay?
-   - Comparable product pricing
-   - Recommended price range
-
-6. **Demand Signals** - Evidence of market interest
-   - Search trends, community discussions
-   - Complaints about existing solutions
-
-Format with clear headers and bullet points for readability.`,
-
-  competitor_xray: (ctx) => `You are a competitive intelligence analyst. Perform a comprehensive competitor analysis:
-
-App Name: ${ctx.app_name || 'Not specified'}
 Target Market: ${ctx.target_market || 'Not specified'}
 Problem Being Solved: ${ctx.problem || 'Not specified'}
 
-Analyze the competitive landscape:
-
-## Top 5 Competitors
-For each competitor, provide:
-- **Name & URL** (real companies/products if applicable)
-- **What they do** (1-2 sentences)
-- **Key Features** (3-5 bullet points)
-- **Pricing** (tiers and amounts)
-- **Target Audience** (who they serve)
-- **Strengths** (what they do well)
-- **Weaknesses** (exploitable gaps)
-- **User Complaints** (from reviews/forums)
-
-## Competitive Landscape Summary
-- Market leader and why
-- Common feature gaps across all competitors
-- Pricing trends in the space
-- Entry barriers
-
-## Differentiation Opportunities
-Top 5 ways to stand out:
-1. Feature gaps to fill
-2. Underserved segments
-3. Pricing strategies
-4. UX improvements
-5. Positioning angles
-
-## Battle Cards
-For the top 3 competitors, provide:
-- "When they say [X], respond with [Y]"
-- Key differentiators to emphasize
-
-Format with clear headers and tables where appropriate.`,
-
-  landing_page_generator: (ctx) => `You are a landing page copywriter. Generate copy for a landing page with these sections:
+Provide:
+1. Top 3-5 Competitors (real or likely)
+2. Their Features
+3. Their Pricing
+4. Their Weaknesses
+5. Differentiation Opportunities`,
+    landing_page_generator: (ctx) => `You are a landing page copywriter. Generate copy for a landing page with these sections:
 
 App: ${ctx.app_name || 'Not specified'}
 Tagline: ${ctx.tagline || 'Not specified'}
@@ -143,8 +67,7 @@ Generate compelling copy for each section:
 8. Final CTA (headline, subheadline, cta_button_text)
 
 Output as JSON with keys: hero, problem_agitation, solution_introduction, features, social_proof, pricing, faq, final_cta.`,
-
-  launch_sequence_generator: (ctx) => `You are a launch sequence copywriter. Generate a 7-day Instagram story launch sequence:
+    launch_sequence_generator: (ctx) => `You are a launch sequence copywriter. Generate a 7-day Instagram story launch sequence:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -170,8 +93,7 @@ Day 6: Launch Day - Open cart
 Day 7: Last Chance - Urgency, close
 
 Output as JSON array with one object per day.`,
-
-  offer_builder: (ctx) => `You are an offer strategist. Create an irresistible offer:
+    offer_builder: (ctx) => `You are an offer strategist. Create an irresistible offer:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem Solved: ${ctx.problem || 'Not specified'}
@@ -186,8 +108,7 @@ Generate:
 5. Offer Charter (complete document)
 
 Output as JSON.`,
-
-  vsl_writer: (ctx) => `You are a VSL (Video Sales Letter) copywriter. Write a complete VSL script:
+    vsl_writer: (ctx) => `You are a VSL (Video Sales Letter) copywriter. Write a complete VSL script:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -210,8 +131,7 @@ Structure:
 10. CTA (urgency and action, 1 minute)
 
 Write conversational, spoken-word copy.`,
-
-  email_generator: (ctx) => `You are an email copywriter. Generate two email sequences:
+    email_generator: (ctx) => `You are an email copywriter. Generate two email sequences:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -234,8 +154,7 @@ SEQUENCE 2: Launch Sequence (7 emails)
 - Email 7: Last call
 
 For each email: Subject line + body copy.`,
-
-  headline_generator: (ctx) => `Generate 20 headline variations for this app:
+    headline_generator: (ctx) => `Generate 20 headline variations for this app:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -249,8 +168,7 @@ Generate headlines in these categories:
 - 5 Social proof headlines
 
 Output as JSON array with headline and category for each.`,
-
-  objection_handler: (ctx) => `Generate objection handlers for this app:
+    objection_handler: (ctx) => `Generate objection handlers for this app:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -269,8 +187,7 @@ Generate responses to these 10 common objections:
 10. "What if I fail?"
 
 For each: The objection + empathetic response + reframe.`,
-
-  ad_copy_generator: (ctx) => `You are an expert ad copywriter. Generate high-converting ad copy for Facebook and Instagram:
+    ad_copy_generator: (ctx) => `You are an expert ad copywriter. Generate high-converting ad copy for Facebook and Instagram:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -302,8 +219,7 @@ For each:
 - CTA button text
 
 Output as JSON with facebook_ads, instagram_ads, and story_ads arrays.`,
-
-  case_study_generator: (ctx) => `You are a case study writer. Generate compelling case studies/success stories:
+    case_study_generator: (ctx) => `You are a case study writer. Generate compelling case studies/success stories:
 
 App: ${ctx.app_name || 'Not specified'}
 Problem: ${ctx.problem || 'Not specified'}
@@ -333,8 +249,7 @@ Generate 3 fictional but realistic case studies using this structure for each:
    - Why this approach worked
 
 Output as JSON array with 3 case study objects.`,
-
-  transformation_mapper: (ctx) => `You are a transformation mapping expert. Based on the problem and target market, generate a detailed visceral transformation map:
+    transformation_mapper: (ctx) => `You are a transformation mapping expert. Based on the problem and target market, generate a detailed visceral transformation map:
 
 Problem: ${ctx.problem || 'Not specified'}
 Target: ${ctx.target_market || 'Not specified'}
@@ -363,8 +278,7 @@ For each dimension, provide:
 - Language they would actually use
 
 Output as JSON with before and after objects, each containing emotional_state, core_fear, daily_experience, and self_identity fields.`,
-
-  fill_app_dna: (ctx) => `You are an app strategist. Based on this app name, generate a complete App DNA profile.
+    fill_app_dna: (ctx) => `You are an app strategist. Based on this app name, generate a complete App DNA profile.
 
 App Name: ${ctx.app_name || 'Not specified'}
 
@@ -377,8 +291,7 @@ Generate a complete app profile with:
 6. tech_stack - Array of recommended technologies (e.g., ["Next.js", "Supabase", "Tailwind CSS"])
 
 Output as JSON with these exact field names.`,
-
-  fill_brand_dna: (ctx) => `You are a brand strategist. Based on this app, generate a complete Brand DNA profile.
+    fill_brand_dna: (ctx) => `You are a brand strategist. Based on this app, generate a complete Brand DNA profile.
 
 App Name: ${ctx.app_name || 'Not specified'}
 App Description: ${ctx.problem || ctx.tagline || 'Not specified'}
@@ -390,8 +303,7 @@ Generate a brand profile with:
 4. banned_words - Array of 5-10 words/phrases to avoid (cliches, overused terms)
 
 Output as JSON with these exact field names.`,
-
-  fill_customer_dna: (ctx) => `You are a customer research expert. Based on this app, generate a complete Customer DNA profile.
+    fill_customer_dna: (ctx) => `You are a customer research expert. Based on this app, generate a complete Customer DNA profile.
 
 App Name: ${ctx.app_name || 'Not specified'}
 App Description: ${ctx.problem || ctx.tagline || 'Not specified'}
@@ -410,97 +322,30 @@ Generate a detailed customer profile with:
 11. after_self_identity - Their new identity/self-image
 
 Output as JSON with these exact field names. Use vivid, emotional language.`,
-
-  truth_report_generator: (ctx) => `You are a strategic market analyst. Generate a comprehensive "Truth Report" that synthesizes all research into a single executive summary.
-
-App Idea:
-- Name: ${ctx.app_name || 'Not specified'}
-- Problem: ${ctx.problem || 'Not specified'}
-- Target Market: ${ctx.target_market || 'Not specified'}
-- Unique Mechanism: ${ctx.unique_mechanism || 'Not specified'}
-
-Previous Research Data:
-${ctx.validator_results || 'Not available'}
-${ctx.niche_results || 'Not available'}
-${ctx.competitor_results || 'Not available'}
-
-Generate a unified Truth Report with:
-
-1. **VIABILITY SCORE** (recalculate based on all data):
-   - Overall: 0-100
-   - Market Size: 0-100
-   - Competition: 0-100 (inverse - higher = less competition)
-   - Demand: 0-100
-   - Monetization: 0-100
-   - Trend: 0-100
-   - Verdict: "go" | "caution" | "no-go"
-   - Verdict Reasoning: 2-3 sentences
-
-2. **MARKET SNAPSHOT**:
-   - Size estimate (e.g., "$2.4B TAM")
-   - Growth rate (e.g., "12% CAGR")
-   - Key players (3-5 names)
-
-3. **TOP 5 PAIN POINTS** (from niche analysis)
-
-4. **TOP 5 COMPETITOR WEAKNESSES** (exploitable gaps)
-
-5. **RECOMMENDED POSITIONING** (2-3 sentences on how to differentiate)
-
-6. **GO/NO-GO RECOMMENDATION** (final verdict with confidence level)
-
-Return as JSON:
-{
-  "viability": {
-    "overall": number,
-    "market_size": number,
-    "competition": number,
-    "demand": number,
-    "monetization": number,
-    "trend": number,
-    "verdict": "go" | "caution" | "no-go",
-    "verdict_reasoning": "string"
-  },
-  "market_snapshot": {
-    "size": "string",
-    "growth": "string",
-    "key_players": ["string"]
-  },
-  "top_pain_points": ["string"],
-  "competitor_weaknesses": ["string"],
-  "recommended_positioning": "string",
-  "confidence_level": "high" | "medium" | "low",
-  "next_steps": ["string"]
-}`,
 };
-
 /** Model routing — landing pages use Opus for quality, everything else uses Opus too */
-const MODEL_OVERRIDES: Record<string, string> = {
-  // All agents use Opus 4.5 by default
-  // Landing page was previously switched to Sonnet for speed, 
-  // but with async processing there's no timeout constraint
+const MODEL_OVERRIDES = {
+// All agents use Opus 4.5 by default
+// Landing page was previously switched to Sonnet for speed, 
+// but with async processing there's no timeout constraint
 };
-
 // When used via Clawdbot gateway proxy, use the alias format
 // When used directly via Anthropic SDK, use the full model ID
 const DEFAULT_MODEL = 'claude-opus-4-5-20251101';
 const DEFAULT_MODEL_GATEWAY = 'claude-opus-4-5';
-
-export function getAgentPrompt(agentType: string, context: Record<string, unknown>): string | null {
-  const generator = AGENT_PROMPTS[agentType];
-  if (!generator) return null;
-  return generator(context);
+function getAgentPrompt(agentType, context) {
+    const generator = AGENT_PROMPTS[agentType];
+    if (!generator)
+        return null;
+    return generator(context);
 }
-
-export function getAgentModel(agentType: string): string {
-  return MODEL_OVERRIDES[agentType] || DEFAULT_MODEL;
+function getAgentModel(agentType) {
+    return MODEL_OVERRIDES[agentType] || DEFAULT_MODEL;
 }
-
 /** Get model name for Clawdbot gateway (alias format) */
-export function getAgentModelGateway(agentType: string): string {
-  return MODEL_OVERRIDES[agentType] || DEFAULT_MODEL_GATEWAY;
+function getAgentModelGateway(agentType) {
+    return MODEL_OVERRIDES[agentType] || DEFAULT_MODEL_GATEWAY;
 }
-
-export function isValidAgentType(agentType: string): boolean {
-  return agentType in AGENT_PROMPTS;
+function isValidAgentType(agentType) {
+    return agentType in AGENT_PROMPTS;
 }

@@ -349,7 +349,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Claude API key not configured. Add it in Settings.' }, { status: 400 });
     }
 
-    const anthropic = new Anthropic({ apiKey: anthropicApiKey });
+    // Support both standard API keys and OAuth tokens
+    const isOAuthToken = anthropicApiKey.startsWith('sk-ant-oat');
+    const anthropic = isOAuthToken 
+      ? new Anthropic({ authToken: anthropicApiKey })
+      : new Anthropic({ apiKey: anthropicApiKey });
 
     // Fetch project with all DNAs
     const { data: project, error: projectError } = await supabase

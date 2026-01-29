@@ -11,3 +11,4 @@ export { default as AgentCard, AgentCardSkeleton } from './AgentCard';
 export { default as SplitPanel, DNASelector } from './SplitPanel';
 export { default as Tabs, TabPanel } from './Tabs';
 export type { Tab } from './Tabs';
+export { ViabilityScoreCard, ViabilityScoreBadge } from './ViabilityScoreCard';
